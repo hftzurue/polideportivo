@@ -29,15 +29,30 @@ public class ReservaEquipamiento {
         this.cantidad = cantidad;
     }
 
-    public Integer getIdReservaEquipamiento() { return idReservaEquipamiento; }
-    public void setIdReservaEquipamiento(Integer idReservaEquipamiento) { this.idReservaEquipamiento = idReservaEquipamiento; }
+    public Integer getIdReservaEquipamiento() {
+        return idReservaEquipamiento;
+    }
+    public void setIdReservaEquipamiento(Integer idReservaEquipamiento) {
+        this.idReservaEquipamiento = idReservaEquipamiento; }
 
-    public Reserva getReserva() { return reserva; }
-    public void setReserva(Reserva reserva) { this.reserva = reserva; }
+    public Reserva getReserva() {
+        return reserva;
+    }
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
 
-    public Equipamiento getEquipamiento() { return equipamiento; }
-    public void setEquipamiento(Equipamiento equipamiento) { this.equipamiento = equipamiento; }
+    public Equipamiento getEquipamiento() {
+        return equipamiento;
+    }
+    public void setEquipamiento(Equipamiento equipamiento) {
+        this.equipamiento = equipamiento;
+    }
 
-    public Integer getCantidad() { return cantidad; }
-    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
+    public Integer getCantidad() {
+        return cantidad;
+    }
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
 }

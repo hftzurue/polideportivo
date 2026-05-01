@@ -50,33 +50,69 @@ public class Reserva {
         this.montoTotal = montoTotal;
     }
 
-    public Integer getIdReserva() { return idReserva; }
+    public Integer getIdReserva() {
+        return idReserva; }
     public void setIdReserva(Integer idReserva) { this.idReserva = idReserva; }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public Usuario getUsuario() {
+        return usuario;
+    }
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
-    public Espacio getEspacio() { return espacio; }
-    public void setEspacio(Espacio espacio) { this.espacio = espacio; }
+    public Espacio getEspacio() { return espacio;
+    }
+    public void setEspacio(Espacio espacio) {
+        this.espacio = espacio;
+    }
 
-    public Integer getCantidadPersonas() { return cantidadPersonas; }
-    public void setCantidadPersonas(Integer cantidadPersonas) { this.cantidadPersonas = cantidadPersonas; }
+    public Integer getCantidadPersonas() {
+        return cantidadPersonas;
+    }
+    public void setCantidadPersonas(Integer cantidadPersonas) {
+        this.cantidadPersonas = cantidadPersonas;
+    }
 
-    public LocalDate getFechaReserva() { return fechaReserva; }
-    public void setFechaReserva(LocalDate fechaReserva) { this.fechaReserva = fechaReserva; }
+    public LocalDate getFechaReserva() {
+        return fechaReserva;
+    }
+    public void setFechaReserva(LocalDate fechaReserva) {
+        this.fechaReserva = fechaReserva;
+    }
 
-    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
-    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
 
-    public LocalTime getHoraInicio() { return horaInicio; }
-    public void setHoraInicio(LocalTime horaInicio) { this.horaInicio = horaInicio; }
+    public LocalTime getHoraInicio() {
+        return horaInicio;
+    }
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
 
-    public LocalTime getHoraFin() { return horaFin; }
-    public void setHoraFin(LocalTime horaFin) { this.horaFin = horaFin; }
+    public LocalTime getHoraFin() {
+        return horaFin;
+    }
+    public void setHoraFin(LocalTime horaFin) {
+        this.horaFin = horaFin;
+    }
 
-    public EstadoReserva getEstado() { return estado; }
-    public void setEstado(EstadoReserva estado) { this.estado = estado; }
+    public EstadoReserva getEstado() {
+        return estado;
+    }
+    public void setEstado(EstadoReserva estado) {
+        this.estado = estado;
+    }
 
-    public BigDecimal getMontoTotal() { return montoTotal; }
-    public void setMontoTotal(BigDecimal montoTotal) { this.montoTotal = montoTotal; }
+    public BigDecimal getMontoTotal() {
+        return montoTotal;
+    }
+    public void setMontoTotal(BigDecimal montoTotal) {
+        this.montoTotal = montoTotal;
+    }
 }

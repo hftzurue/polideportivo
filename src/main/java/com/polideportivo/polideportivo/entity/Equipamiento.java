@@ -29,18 +29,38 @@ public class Equipamiento {
         this.activo = activo;
     }
 
-    public Integer getIdEquipamiento() { return idEquipamiento; }
-    public void setIdEquipamiento(Integer idEquipamiento) { this.idEquipamiento = idEquipamiento; }
+    public Integer getIdEquipamiento() {
+        return idEquipamiento;
+    }
+    public void setIdEquipamiento(Integer idEquipamiento) {
+        this.idEquipamiento = idEquipamiento;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public Integer getCantidadTotal() { return cantidadTotal; }
-    public void setCantidadTotal(Integer cantidadTotal) { this.cantidadTotal = cantidadTotal; }
+    public Integer getCantidadTotal() {
+        return cantidadTotal;
+    }
+    public void setCantidadTotal(Integer cantidadTotal) {
+        this.cantidadTotal = cantidadTotal;
+    }
 
-    public Disciplina getDisciplina() { return disciplina; }
-    public void setDisciplina(Disciplina disciplina) { this.disciplina = disciplina; }
+    public Disciplina getDisciplina() {
+        return disciplina;
+    }
+    public void setDisciplina(Disciplina disciplina) {
+        this.disciplina = disciplina;
+    }
 
-    public Boolean getActivo() { return activo; }
-    public void setActivo(Boolean activo) { this.activo = activo; }
+    public Boolean getActivo() {
+        return activo;
+    }
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
 }

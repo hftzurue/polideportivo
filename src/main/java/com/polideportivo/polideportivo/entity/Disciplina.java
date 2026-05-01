@@ -20,12 +20,24 @@ public class Disciplina {
         this.descripcion = descripcion;
     }
 
-    public Integer getIdDisciplina() { return idDisciplina; }
-    public void setIdDisciplina(Integer idDisciplina) { this.idDisciplina = idDisciplina; }
+    public Integer getIdDisciplina() {
+        return idDisciplina;
+    }
+    public void setIdDisciplina(Integer idDisciplina) {
+        this.idDisciplina = idDisciplina;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public String getDescripcion() {
+        return descripcion;
+    }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }

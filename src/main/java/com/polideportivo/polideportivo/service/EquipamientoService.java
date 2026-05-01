@@ -16,8 +16,7 @@ public class EquipamientoService {
     private final EquipamientoRepository equipamientoRepository;
     private final DisciplinaRepository disciplinaRepository;
 
-    public EquipamientoService(EquipamientoRepository equipamientoRepository,
-                               DisciplinaRepository disciplinaRepository) {
+    public EquipamientoService(EquipamientoRepository equipamientoRepository, DisciplinaRepository disciplinaRepository) {
         this.equipamientoRepository = equipamientoRepository;
         this.disciplinaRepository = disciplinaRepository;
     }

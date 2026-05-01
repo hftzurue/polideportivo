@@ -40,30 +40,66 @@ public class Espacio {
         this.activo = activo;
     }
 
-    public Integer getIdEspacio() { return idEspacio; }
-    public void setIdEspacio(Integer idEspacio) { this.idEspacio = idEspacio; }
+    public Integer getIdEspacio() {
+        return idEspacio;
+    }
+    public void setIdEspacio(Integer idEspacio) {
+        this.idEspacio = idEspacio;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public String getDescripcion() {
+        return descripcion;
+    }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-    public Disciplina getDisciplina() { return disciplina; }
-    public void setDisciplina(Disciplina disciplina) { this.disciplina = disciplina; }
+    public Disciplina getDisciplina() {
+        return disciplina;
+    }
+    public void setDisciplina(Disciplina disciplina) {
+        this.disciplina = disciplina;
+    }
 
-    public Integer getCapacidad() { return capacidad; }
-    public void setCapacidad(Integer capacidad) { this.capacidad = capacidad; }
+    public Integer getCapacidad() {
+        return capacidad;
+    }
+    public void setCapacidad(Integer capacidad) {
+        this.capacidad = capacidad;
+    }
 
-    public LocalTime getHoraApertura() { return horaApertura; }
-    public void setHoraApertura(LocalTime horaApertura) { this.horaApertura = horaApertura; }
+    public LocalTime getHoraApertura() {
+        return horaApertura;
+    }
+    public void setHoraApertura(LocalTime horaApertura) {
+        this.horaApertura = horaApertura;
+    }
 
-    public LocalTime getHoraCierre() { return horaCierre; }
-    public void setHoraCierre(LocalTime horaCierre) { this.horaCierre = horaCierre; }
+    public LocalTime getHoraCierre() {
+        return horaCierre;
+    }
+    public void setHoraCierre(LocalTime horaCierre) {
+        this.horaCierre = horaCierre;
+    }
 
-    public BigDecimal getPrecioHora() { return precioHora; }
-    public void setPrecioHora(BigDecimal precioHora) { this.precioHora = precioHora; }
+    public BigDecimal getPrecioHora() {
+        return precioHora;
+    }
+    public void setPrecioHora(BigDecimal precioHora) {
+        this.precioHora = precioHora;
+    }
 
-    public Boolean getActivo() { return activo; }
-    public void setActivo(Boolean activo) { this.activo = activo; }
+    public Boolean getActivo() {
+        return activo;
+    }
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
 }
