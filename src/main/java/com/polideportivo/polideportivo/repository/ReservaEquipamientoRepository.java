@@ -4,6 +4,7 @@ import com.polideportivo.polideportivo.entity.ReservaEquipamiento;
 import com.polideportivo.polideportivo.enums.EstadoReserva;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface ReservaEquipamientoRepository extends JpaRepository<ReservaEquipamiento, Integer> {
     List<ReservaEquipamiento> findByReserva_IdReserva(Integer idReserva);
     // Busca todas las reservas donde se solicitó un equipamiento específico
