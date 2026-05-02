@@ -3,7 +3,9 @@ package com.polideportivo.polideportivo.service;
 import com.polideportivo.polideportivo.entity.Usuario;
 import com.polideportivo.polideportivo.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class UsuarioService{
     public Usuario crearUsuario(Usuario usuario) {
         usuarioRepository.findByCorreoIgnoreCase(usuario.getCorreo())
                 .ifPresent(u -> {
-                    throw new RuntimeException("El correo ya está registrado");
+                    throw new ResponseStatusException(HttpStatus.CONFLICT,"El correo ya está registrado");
                 });
 
         return usuarioRepository.save(usuario);
@@ -28,12 +30,12 @@ public class UsuarioService{
 
     public Usuario obtenerPorId(Integer id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
     }
 
     public Usuario obtenerPorCorreo(String correo) {
         return usuarioRepository.findByCorreoIgnoreCase(correo)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuario no encontrado"));
     }
 
     public List<Usuario> buscarPorNombre(String nombre) {
