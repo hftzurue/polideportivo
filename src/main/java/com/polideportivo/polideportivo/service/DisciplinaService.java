@@ -2,15 +2,16 @@ package com.polideportivo.polideportivo.service;
 
 import com.polideportivo.polideportivo.entity.Disciplina;
 import com.polideportivo.polideportivo.repository.DisciplinaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
 @Transactional
 public class DisciplinaService {
-
     private final DisciplinaRepository disciplinaRepository;
 
     public DisciplinaService(DisciplinaRepository disciplinaRepository) {
@@ -19,7 +20,7 @@ public class DisciplinaService {
 
     public Disciplina crearDisciplina(Disciplina disciplina) {
         if (disciplinaRepository.existsByNombreIgnoreCase(disciplina.getNombre())) {
-            throw new RuntimeException("Ya existe una disciplina con ese nombre");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una disciplina con ese nombre");
         }
 
         return disciplinaRepository.save(disciplina);
@@ -31,12 +32,12 @@ public class DisciplinaService {
 
     public Disciplina obtenerPorId(Integer id) {
         return disciplinaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Disciplina no encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Disciplina no encontrada"));
     }
 
     public Disciplina obtenerPorNombre(String nombre) {
         return disciplinaRepository.findByNombreIgnoreCase(nombre)
-                .orElseThrow(() -> new RuntimeException("Disciplina no encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Disciplina no encontrada"));
     }
 
     public List<Disciplina> buscarPorNombre(String nombre) {
@@ -48,7 +49,7 @@ public class DisciplinaService {
 
         if (!existente.getNombre().equalsIgnoreCase(disciplina.getNombre())
                 && disciplinaRepository.existsByNombreIgnoreCase(disciplina.getNombre())) {
-            throw new RuntimeException("Ya existe una disciplina con ese nombre");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una disciplina con ese nombre");
         }
 
         existente.setNombre(disciplina.getNombre());
@@ -63,7 +64,7 @@ public class DisciplinaService {
         if (disciplina.getNombre() != null) {
             if (!existente.getNombre().equalsIgnoreCase(disciplina.getNombre())
                     && disciplinaRepository.existsByNombreIgnoreCase(disciplina.getNombre())) {
-                throw new RuntimeException("Ya existe una disciplina con ese nombre");
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una disciplina con ese nombre");
             }
 
             existente.setNombre(disciplina.getNombre());

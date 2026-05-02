@@ -7,6 +7,8 @@ import com.polideportivo.polideportivo.enums.EstadoReserva;
 import com.polideportivo.polideportivo.repository.EspacioRepository;
 import com.polideportivo.polideportivo.repository.ReservaRepository;
 import com.polideportivo.polideportivo.repository.UsuarioRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,24 +32,24 @@ public class ReservaService {
         Integer idUsuario = reserva.getUsuario().getIdUsuario();
         Integer idEspacio = reserva.getEspacio().getIdEspacio();
 
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        Espacio espacio = espacioRepository.findById(idEspacio).orElseThrow(() -> new RuntimeException("Espacio no encontrado"));
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        Espacio espacio = espacioRepository.findById(idEspacio).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Espacio no encontrado"));
 
         if (!espacio.getActivo()) {
-            throw new RuntimeException("El espacio no está activo");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El espacio no está activo");
         }
 
         if (reserva.getCantidadPersonas() > espacio.getCapacidad()) {
-            throw new RuntimeException("La cantidad de personas supera la capacidad del espacio");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cantidad de personas supera la capacidad del espacio");
         }
 
         if (reserva.getHoraInicio().isBefore(espacio.getHoraApertura())
                 || reserva.getHoraFin().isAfter(espacio.getHoraCierre())) {
-            throw new RuntimeException("La reserva está fuera del horario permitido del espacio");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La reserva está fuera del horario permitido del espacio");
         }
 
         if (!reserva.getHoraInicio().isBefore(reserva.getHoraFin())) {
-            throw new RuntimeException("La hora de inicio debe ser menor que la hora de fin");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La hora de inicio debe ser menor que la hora de fin");
         }
 
         //Estados que hacen que una reserva se bloquee, porque ya esta reservado
@@ -60,7 +62,7 @@ public class ReservaService {
         Long ReservasConflictos = reservaRepository.contarReservasEnConflicto(idEspacio, reserva.getFechaReserva(), reserva.getHoraInicio(), reserva.getHoraFin(), estadosQueBloquean);
 
         if (ReservasConflictos > 0) {
-            throw new RuntimeException("Ya existe una reserva en ese horario");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una reserva en ese horario");
         }
 
         reserva.setUsuario(usuario);
@@ -85,7 +87,7 @@ public class ReservaService {
     }
 
     public Reserva obtenerPorId(Integer id) {
-        return reservaRepository.findById(id).orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+        return reservaRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Reserva no encontrada"));
     }
 
     public List<Reserva> obtenerPorUsuario(Integer idUsuario) {
@@ -126,10 +128,10 @@ public class ReservaService {
         Reserva reserva = obtenerPorId(idReserva);
 
         if (reserva.getEstado() == EstadoReserva.CANCELADA) {
-            throw new RuntimeException("La reserva ya esta cancelada");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"La reserva ya esta cancelada");
         }
         if (reserva.getEstado() == EstadoReserva.FINALIZADA) {
-            throw new RuntimeException("No se puede cancelar una reserva finalizada");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"No se puede cancelar una reserva finalizada");
         }
 
         reserva.setEstado(EstadoReserva.CANCELADA);
@@ -141,13 +143,13 @@ public class ReservaService {
         Reserva reserva = obtenerPorId(idReserva);
 
         if (reserva.getEstado() == EstadoReserva.CANCELADA) {
-            throw new RuntimeException("No se puede confirmar una reserva cancelada");
-        }
-        if (reserva.getEstado() == EstadoReserva.CONFIRMADA) {
-            throw new RuntimeException("La reserva ya esta confirmada");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"No se puede confirmar una reserva cancelada");
         }
         if (reserva.getEstado() == EstadoReserva.FINALIZADA) {
-            throw new RuntimeException("No se puede confirmar una reserva finalizada");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"No se puede confirmar una reserva finalizada");
+        }
+        if (reserva.getEstado() == EstadoReserva.CONFIRMADA) {
+            return reserva;
         }
 
         reserva.setEstado(EstadoReserva.CONFIRMADA);
@@ -159,13 +161,13 @@ public class ReservaService {
         Reserva reserva = obtenerPorId(idReserva);
 
         if (reserva.getEstado() == EstadoReserva.PENDIENTE) {
-            throw new RuntimeException("No se puede finalizar una reserva pendiente");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"No se puede finalizar una reserva pendiente");
         }
         if (reserva.getEstado() == EstadoReserva.CANCELADA) {
-            throw new RuntimeException("No se puede finalizar una reserva cancelada");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"No se puede finalizar una reserva cancelada");
         }
         if (reserva.getEstado() == EstadoReserva.FINALIZADA) {
-            throw new RuntimeException("La reserva ya esta finalizada");
+            return reserva;
         }
 
         reserva.setEstado(EstadoReserva.FINALIZADA);
@@ -178,21 +180,33 @@ public class ReservaService {
 
         if (reserva.getCantidadPersonas() != null) {
             existente.setCantidadPersonas(reserva.getCantidadPersonas());
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valor de CantidadPersonas nulo");
         }
         if (reserva.getFechaReserva() != null) {
             existente.setFechaReserva(reserva.getFechaReserva());
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valor de FechaReserva nulo");
         }
         if (reserva.getHoraInicio() != null) {
             existente.setHoraInicio(reserva.getHoraInicio());
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valor de HoraInicio nulo");
         }
         if (reserva.getHoraFin() != null) {
             existente.setHoraFin(reserva.getHoraFin());
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valor de HoraFin nulo");
         }
         if (reserva.getEstado() != null) {
             existente.setEstado(reserva.getEstado());
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valor de Estado nulo");
         }
         if (reserva.getMontoTotal() != null) {
             existente.setMontoTotal(reserva.getMontoTotal());
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valor de MontoTotal nulo");
         }
 
         return reservaRepository.save(existente);

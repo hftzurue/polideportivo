@@ -4,15 +4,16 @@ import com.polideportivo.polideportivo.entity.Disciplina;
 import com.polideportivo.polideportivo.entity.Equipamiento;
 import com.polideportivo.polideportivo.repository.DisciplinaRepository;
 import com.polideportivo.polideportivo.repository.EquipamientoRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
 @Transactional
 public class EquipamientoService {
-
     private final EquipamientoRepository equipamientoRepository;
     private final DisciplinaRepository disciplinaRepository;
 
@@ -23,13 +24,13 @@ public class EquipamientoService {
 
     public Equipamiento crearEquipamiento(Equipamiento equipamiento) {
         if (equipamientoRepository.existsByNombreIgnoreCase(equipamiento.getNombre())) {
-            throw new RuntimeException("Ya existe un equipamiento con ese nombre");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un equipamiento con ese nombre");
         }
 
         Integer idDisciplina = equipamiento.getDisciplina().getIdDisciplina();
 
         Disciplina disciplina = disciplinaRepository.findById(idDisciplina)
-                .orElseThrow(() -> new RuntimeException("Disciplina no encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disciplina no encontrada"));
 
         equipamiento.setDisciplina(disciplina);
 
@@ -54,12 +55,12 @@ public class EquipamientoService {
 
     public Equipamiento obtenerPorId(Integer id) {
         return equipamientoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Equipamiento no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Equipamiento no encontrado"));
     }
 
     public Equipamiento obtenerPorNombre(String nombre) {
         return equipamientoRepository.findByNombreIgnoreCase(nombre)
-                .orElseThrow(() -> new RuntimeException("Equipamiento no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Equipamiento no encontrado"));
     }
 
     public List<Equipamiento> buscarPorNombre(String nombre) {
@@ -79,12 +80,12 @@ public class EquipamientoService {
 
         if (!existente.getNombre().equalsIgnoreCase(equipamiento.getNombre())
                 && equipamientoRepository.existsByNombreIgnoreCase(equipamiento.getNombre())) {
-            throw new RuntimeException("Ya existe un equipamiento con ese nombre");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un equipamiento con ese nombre");
         }
 
         Disciplina disciplina = disciplinaRepository.findById(
                 equipamiento.getDisciplina().getIdDisciplina()
-        ).orElseThrow(() -> new RuntimeException("Disciplina no encontrada"));
+        ).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disciplina no encontrada"));
 
         existente.setNombre(equipamiento.getNombre());
         existente.setCantidadTotal(equipamiento.getCantidadTotal());
@@ -100,7 +101,7 @@ public class EquipamientoService {
         if (equipamiento.getNombre() != null) {
             if (!existente.getNombre().equalsIgnoreCase(equipamiento.getNombre())
                     && equipamientoRepository.existsByNombreIgnoreCase(equipamiento.getNombre())) {
-                throw new RuntimeException("Ya existe un equipamiento con ese nombre");
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un equipamiento con ese nombre");
             }
 
             existente.setNombre(equipamiento.getNombre());
@@ -113,7 +114,7 @@ public class EquipamientoService {
         if (equipamiento.getDisciplina() != null && equipamiento.getDisciplina().getIdDisciplina() != null) {
             Disciplina disciplina = disciplinaRepository.findById(
                     equipamiento.getDisciplina().getIdDisciplina()
-            ).orElseThrow(() -> new RuntimeException("Disciplina no encontrada"));
+            ).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disciplina no encontrada"));
 
             existente.setDisciplina(disciplina);
         }
