@@ -60,13 +60,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
            AND r.horaInicio < :horaFin
            AND r.horaFin > :horaInicio
            """)
-    Long contarReservasEnConflicto(
-            Integer idEspacio,
-            LocalDate fechaReserva,
-            LocalTime horaInicio,
-            LocalTime horaFin,
-            Collection<EstadoReserva> estados
-    );
+    Long contarReservasEnConflicto(Integer idEspacio, LocalDate fechaReserva, LocalTime horaInicio, LocalTime horaFin, Collection<EstadoReserva> estados);
     // Obtener reservas futuras de un usuario
     List<Reserva> findByUsuario_IdUsuarioAndFechaReservaGreaterThanEqualOrderByFechaReservaAscHoraInicioAsc(
             Integer idUsuario,
