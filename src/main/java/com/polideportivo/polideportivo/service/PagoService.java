@@ -1,5 +1,6 @@
 package com.polideportivo.polideportivo.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.polideportivo.polideportivo.entity.Pago;
 import com.polideportivo.polideportivo.entity.Reserva;
@@ -9,6 +10,7 @@ import com.polideportivo.polideportivo.enums.MetodoPago;
 import com.polideportivo.polideportivo.repository.PagoRepository;
 import com.polideportivo.polideportivo.repository.ReservaRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,24 +31,24 @@ public class PagoService {
 
     public Pago crearPago(Pago pago) {
         if (pago.getReserva() == null || pago.getReserva().getIdReserva() == null) {
-            throw new RuntimeException("La reserva es obligatoria");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La reserva es obligatoria");
         }
 
         if (pago.getMetodoPago() == null) {
-            throw new RuntimeException("El método de pago es obligatorio");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El método de pago es obligatorio");
         }
 
         Integer idReserva = pago.getReserva().getIdReserva();
 
         if (pagoRepository.existsByReserva_IdReserva(idReserva)) {
-            throw new RuntimeException("La reserva ya tiene un pago registrado");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "La reserva ya tiene un pago registrado");
         }
 
         Reserva reserva = reservaRepository.findById(idReserva)
-                .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva no encontrada"));
 
         if (reserva.getEstado() == EstadoReserva.CANCELADA) {
-            throw new RuntimeException("No se puede pagar una reserva cancelada");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede pagar una reserva cancelada");
         }
 
         BigDecimal montoFinal = calcularMontoReserva(reserva);
@@ -79,12 +81,12 @@ public class PagoService {
 
     public Pago obtenerPorId(Integer id) {
         return pagoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pago no encontrado"));
     }
 
     public Pago obtenerPorReserva(Integer idReserva) {
         return pagoRepository.findByReserva_IdReserva(idReserva)
-                .orElseThrow(() -> new RuntimeException("No hay pago registrado para esa reserva"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No hay pago registrado para esa reserva"));
     }
 
     public List<Pago> obtenerPorEstado(EstadoPago estadoPago) {
@@ -101,7 +103,7 @@ public class PagoService {
 
     public List<Pago> obtenerEntreFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
         if (fechaInicio == null || fechaFin == null || fechaInicio.isAfter(fechaFin)) {
-            throw new RuntimeException("Rango de fechas inválido");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rango de fechas inválido");
         }
 
         return pagoRepository.findByFechaPagoBetweenOrderByFechaPagoDesc(fechaInicio, fechaFin);
@@ -121,7 +123,7 @@ public class PagoService {
 
     public Pago actualizarEstadoPago(Integer idPago, EstadoPago estadoPago) {
         if (estadoPago == null) {
-            throw new RuntimeException("El estado del pago es obligatorio");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El estado del pago es obligatorio");
         }
 
         Pago pago = obtenerPorId(idPago);
@@ -144,15 +146,15 @@ public class PagoService {
 
     private void validarDatosPago(Pago pago) {
         if (pago.getReserva() == null || pago.getReserva().getIdReserva() == null) {
-            throw new RuntimeException("La reserva es obligatoria");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La reserva es obligatoria");
         }
 
         if (pago.getMonto() == null || pago.getMonto().signum() <= 0) {
-            throw new RuntimeException("El monto debe ser mayor a 0");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El monto debe ser mayor a 0");
         }
 
         if (pago.getMetodoPago() == null) {
-            throw new RuntimeException("El método de pago es obligatorio");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El método de pago es obligatorio");
         }
     }
 
@@ -163,7 +165,7 @@ public class PagoService {
         ).toMinutes();
 
         if (minutos <= 0) {
-            throw new RuntimeException("El horario de la reserva no es válido");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El horario de la reserva no es válido");
         }
 
         BigDecimal horas = BigDecimal.valueOf(minutos)
