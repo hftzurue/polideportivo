@@ -4,8 +4,10 @@ import com.polideportivo.polideportivo.entity.Disciplina;
 import com.polideportivo.polideportivo.entity.Espacio;
 import com.polideportivo.polideportivo.repository.DisciplinaRepository;
 import com.polideportivo.polideportivo.repository.EspacioRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -25,14 +27,14 @@ public class EspacioService {
 
     public Espacio crearEspacio(Espacio espacio) {
         if (espacioRepository.existsByNombreIgnoreCase(espacio.getNombre())) {
-            throw new RuntimeException("Ya existe un espacio con ese nombre");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un espacio con ese nombre");
         }
 
         validarDatosEspacio(espacio);
 
         Disciplina disciplina = disciplinaRepository
                 .findById(espacio.getDisciplina().getIdDisciplina())
-                .orElseThrow(() -> new RuntimeException("Disciplina no encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disciplina no encontrada"));
 
         espacio.setDisciplina(disciplina);
 
@@ -49,12 +51,12 @@ public class EspacioService {
 
     public Espacio obtenerPorId(Integer id) {
         return espacioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Espacio no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Espacio no encontrado"));
     }
 
     public Espacio obtenerPorNombre(String nombre) {
         return espacioRepository.findByNombreIgnoreCase(nombre)
-                .orElseThrow(() -> new RuntimeException("Espacio no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Espacio no encontrado"));
     }
 
     public List<Espacio> buscarPorNombre(String nombre) {
@@ -79,7 +81,7 @@ public class EspacioService {
 
     public List<Espacio> obtenerActivosConCapacidad(Integer capacidad) {
         if (capacidad == null || capacidad <= 0) {
-            throw new RuntimeException("La capacidad debe ser mayor a 0");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La capacidad debe ser mayor a 0");
         }
 
         return espacioRepository.findByCapacidadGreaterThanEqualAndActivoTrue(capacidad);
@@ -101,7 +103,7 @@ public class EspacioService {
             LocalTime horaFin) {
 
         if (idDisciplina == null) {
-            throw new RuntimeException("La disciplina es obligatoria");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La disciplina es obligatoria");
         }
 
         validarHorario(horaInicio, horaFin);
@@ -119,14 +121,14 @@ public class EspacioService {
 
         if (!existente.getNombre().equalsIgnoreCase(espacio.getNombre())
                 && espacioRepository.existsByNombreIgnoreCase(espacio.getNombre())) {
-            throw new RuntimeException("Ya existe un espacio con ese nombre");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un espacio con ese nombre");
         }
 
         validarDatosEspacio(espacio);
 
         Disciplina disciplina = disciplinaRepository
                 .findById(espacio.getDisciplina().getIdDisciplina())
-                .orElseThrow(() -> new RuntimeException("Disciplina no encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disciplina no encontrada"));
 
         existente.setNombre(espacio.getNombre());
         existente.setDescripcion(espacio.getDescripcion());
@@ -146,7 +148,7 @@ public class EspacioService {
         if (espacio.getNombre() != null) {
             if (!existente.getNombre().equalsIgnoreCase(espacio.getNombre())
                     && espacioRepository.existsByNombreIgnoreCase(espacio.getNombre())) {
-                throw new RuntimeException("Ya existe un espacio con ese nombre");
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un espacio con ese nombre");
             }
             existente.setNombre(espacio.getNombre());
         }
@@ -158,21 +160,21 @@ public class EspacioService {
         if (espacio.getDisciplina() != null && espacio.getDisciplina().getIdDisciplina() != null) {
             Disciplina disciplina = disciplinaRepository
                     .findById(espacio.getDisciplina().getIdDisciplina())
-                    .orElseThrow(() -> new RuntimeException("Disciplina no encontrada"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disciplina no encontrada"));
 
             existente.setDisciplina(disciplina);
         }
 
         if (espacio.getCapacidad() != null) {
             if (espacio.getCapacidad() <= 0) {
-                throw new RuntimeException("La capacidad debe ser mayor a 0");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La capacidad debe ser mayor a 0");
             }
             existente.setCapacidad(espacio.getCapacidad());
         }
 
         if (espacio.getPrecioHora() != null) {
             if (espacio.getPrecioHora().signum() < 0) {
-                throw new RuntimeException("El precio por hora debe ser mayor o igual a 0");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El precio por hora debe ser mayor o igual a 0");
             }
             existente.setPrecioHora(espacio.getPrecioHora());
         }
@@ -213,23 +215,23 @@ public class EspacioService {
 
     private void validarDatosEspacio(Espacio espacio) {
         if (espacio.getNombre() == null || espacio.getNombre().isBlank()) {
-            throw new RuntimeException("El nombre es obligatorio");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre es obligatorio");
         }
 
         if (espacio.getDescripcion() == null || espacio.getDescripcion().isBlank()) {
-            throw new RuntimeException("La descripción es obligatoria");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La descripción es obligatoria");
         }
 
         if (espacio.getDisciplina() == null || espacio.getDisciplina().getIdDisciplina() == null) {
-            throw new RuntimeException("La disciplina es obligatoria");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La disciplina es obligatoria");
         }
 
         if (espacio.getCapacidad() == null || espacio.getCapacidad() <= 0) {
-            throw new RuntimeException("La capacidad debe ser mayor a 0");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La capacidad debe ser mayor a 0");
         }
 
         if (espacio.getPrecioHora() == null || espacio.getPrecioHora().signum() < 0) {
-            throw new RuntimeException("El precio por hora debe ser mayor o igual a 0");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El precio por hora debe ser mayor o igual a 0");
         }
 
         validarHorario(espacio.getHoraApertura(), espacio.getHoraCierre());
@@ -237,7 +239,7 @@ public class EspacioService {
 
     private void validarHorario(LocalTime horaInicio, LocalTime horaFin) {
         if (horaInicio == null || horaFin == null || !horaInicio.isBefore(horaFin)) {
-            throw new RuntimeException("El horario no es válido");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El horario no es válido");
         }
     }
 }
