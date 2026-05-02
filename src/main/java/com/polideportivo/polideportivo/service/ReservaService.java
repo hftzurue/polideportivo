@@ -31,7 +31,6 @@ public class ReservaService {
         Integer idEspacio = reserva.getEspacio().getIdEspacio();
 
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
         Espacio espacio = espacioRepository.findById(idEspacio).orElseThrow(() -> new RuntimeException("Espacio no encontrado"));
 
         if (!espacio.getActivo()) {
