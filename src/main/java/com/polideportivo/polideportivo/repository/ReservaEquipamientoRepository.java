@@ -41,4 +41,43 @@ public interface ReservaEquipamientoRepository extends JpaRepository<ReservaEqui
            WHERE re.equipamiento.idEquipamiento = :idEquipamiento
            """)
     Integer sumarCantidadSolicitadaPorEquipamiento(Integer idEquipamiento);
+
+    //Suma la cantidad total solicitada de un equipamiento especifico, filtrando por fecha, hora y estado de reserva
+    @Query("""
+       SELECT COALESCE(SUM(re.cantidad), 0)
+       FROM ReservaEquipamiento re
+       WHERE re.equipamiento.idEquipamiento = :idEquipamiento
+       AND re.reserva.fechaReserva = :fechaReserva
+       AND re.reserva.estado IN :estados
+       AND re.reserva.horaInicio < :horaFin
+       AND re.reserva.horaFin > :horaInicio
+       """)
+    Integer sumarCantidadEnConflicto(
+            Integer idEquipamiento,
+            LocalDate fechaReserva,
+            LocalTime horaInicio,
+            LocalTime horaFin,
+            Collection<EstadoReserva> estados
+    );
+
+    //Suma la cantidad total solicitada de un equipamiento especifico, filtrando por fecha, hora
+    // y estado de reserva, pero sin contarse a sí mismo
+    @Query("""
+       SELECT COALESCE(SUM(re.cantidad), 0)
+       FROM ReservaEquipamiento re
+       WHERE re.equipamiento.idEquipamiento = :idEquipamiento
+       AND re.idReservaEquipamiento <> :idReservaEquipamiento
+       AND re.reserva.fechaReserva = :fechaReserva
+       AND re.reserva.estado IN :estados
+       AND re.reserva.horaInicio < :horaFin
+       AND re.reserva.horaFin > :horaInicio
+       """)
+    Integer sumarCantidadEnConflictoExcluyendoActual(
+            Integer idEquipamiento,
+            Integer idReservaEquipamiento,
+            LocalDate fechaReserva,
+            LocalTime horaInicio,
+            LocalTime horaFin,
+            Collection<EstadoReserva> estados
+    );
 }
