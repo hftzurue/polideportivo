@@ -27,12 +27,17 @@ public class EquipamientoService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un equipamiento con ese nombre");
         }
 
+        if (equipamiento.getCantidadTotal() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cantidad total no puede ser negativa");
+        }
+
         Integer idDisciplina = equipamiento.getDisciplina().getIdDisciplina();
 
         Disciplina disciplina = disciplinaRepository.findById(idDisciplina)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disciplina no encontrada"));
 
         equipamiento.setDisciplina(disciplina);
+
 
         if (equipamiento.getActivo() == null) {
             equipamiento.setActivo(true);
