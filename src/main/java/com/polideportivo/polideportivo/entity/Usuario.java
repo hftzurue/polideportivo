@@ -16,17 +16,25 @@ public class Usuario {
     private String segundoApellido;
     private String correo;
 
+    @Column(nullable = false, unique = true)
+    private String nombreUsuario;
+
+    @Column(nullable = false)
+    private String contrasena;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Rol rol;
 
     public Usuario() {}
 
-    public Usuario(String nombre, String primerApellido, String segundoApellido, String correo, Rol rol) {
+    public Usuario(String nombre, String primerApellido, String segundoApellido, String correo, String nombreUsuario, String contrasena, Rol rol) {
         this.nombre = nombre;
         this.primerApellido = primerApellido;
         this.segundoApellido = segundoApellido;
         this.correo = correo;
+        this.nombreUsuario = nombreUsuario;
+        this.contrasena = contrasena;
         this.rol = rol;
     }
 
@@ -67,4 +75,10 @@ public class Usuario {
     public void setRol(Rol rol) {
         this.rol = rol;
     }
+
+    public String getNombreUsuario(){ return this.nombreUsuario; }
+    public void setNombreUsuario(String nombreUsuario){ this.nombreUsuario = nombreUsuario; }
+
+    public String getContrasena(){ return this.contrasena; }
+    public void setContrasena(String contrasena){ this.contrasena = contrasena; }
 }

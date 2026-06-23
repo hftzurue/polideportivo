@@ -7,6 +7,8 @@ CREATE TABLE usuario (
     primer_apellido VARCHAR(100) NOT NULL,
     segundo_apellido VARCHAR(100),
     correo VARCHAR(150) UNIQUE,
+    nombre_usuario VARCHAR(150) NOT NULL UNIQUE,
+    contrasena VARCHAR(255) NOT NULL,
     rol VARCHAR(20) NOT NULL,
 
     CONSTRAINT chk_usuario_rol
