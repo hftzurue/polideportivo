@@ -1,5 +1,6 @@
 package com.polideportivo.polideportivo.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.polideportivo.polideportivo.enums.Rol;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,7 +21,7 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String nombreUsuario;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private String contrasena;
 
