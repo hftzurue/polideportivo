@@ -2,9 +2,9 @@ package com.polideportivo.polideportivo.controller;
 
 import com.polideportivo.polideportivo.entity.Reserva;
 import com.polideportivo.polideportivo.enums.EstadoReserva;
+import com.polideportivo.polideportivo.security.SecurityUtils;
 import com.polideportivo.polideportivo.service.ReservaService;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,6 +17,32 @@ public class ReservaController {
         this.reservaService = reservaService;
     }
 
+    // Cliente
+    @GetMapping("/mis-reservas")
+    public List<Reserva> obtenerMisReservas() {
+        Integer idUsuario = SecurityUtils.obtenerIdUsuarioAutenticado();
+        return reservaService.obtenerPorUsuario(idUsuario);
+    }
+
+    @PostMapping("/mis-reservas")
+    public Reserva registrarMiReserva(@RequestBody Reserva reserva) {
+        Integer idUsuario = SecurityUtils.obtenerIdUsuarioAutenticado();
+        return reservaService.registrarReservaCliente(idUsuario, reserva);
+    }
+
+    @PatchMapping("/mis-reservas/{idReserva}")
+    public Reserva actualizarMiReserva(@PathVariable Integer idReserva, @RequestBody Reserva reserva) {
+        Integer idUsuario = SecurityUtils.obtenerIdUsuarioAutenticado();
+        return reservaService.actualizarReservaCliente(idUsuario, idReserva, reserva);
+    }
+
+    @PatchMapping("/mis-reservas/{idReserva}/cancelar")
+    public Reserva cancelarMiReserva(@PathVariable Integer idReserva) {
+        Integer idUsuario = SecurityUtils.obtenerIdUsuarioAutenticado();
+        return reservaService.cancelarReservaCliente(idUsuario, idReserva);
+    }
+
+    // Admin
     @PostMapping
     public Reserva registrarReserva(@RequestBody Reserva reserva) {
         return reservaService.registrarReserva(reserva);
@@ -63,7 +89,9 @@ public class ReservaController {
     }
 
     @GetMapping("/fechas")
-    public List<Reserva> obtenerReservasEntreFechas(@RequestParam LocalDate fechaInicio, @RequestParam LocalDate fechaFin) {
+    public List<Reserva> obtenerReservasEntreFechas(
+            @RequestParam LocalDate fechaInicio,
+            @RequestParam LocalDate fechaFin) {
         return reservaService.obtenerReservasEntreFechas(fechaInicio, fechaFin);
     }
 

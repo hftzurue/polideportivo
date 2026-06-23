@@ -1,12 +1,12 @@
 package com.polideportivo.polideportivo.controller;
 
+import com.polideportivo.polideportivo.security.SecurityUtils;
 import org.springframework.web.bind.annotation.RestController;
 import com.polideportivo.polideportivo.entity.Pago;
 import com.polideportivo.polideportivo.enums.EstadoPago;
 import com.polideportivo.polideportivo.enums.MetodoPago;
 import com.polideportivo.polideportivo.service.PagoService;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +21,20 @@ public class PagoController {
         this.pagoService = pagoService;
     }
 
+    // Cliente
+    @GetMapping("/mis-pagos")
+    public List<Pago> obtenerMisPagos() {
+        Integer idUsuario = SecurityUtils.obtenerIdUsuarioAutenticado();
+        return pagoService.obtenerPorUsuario(idUsuario);
+    }
+
+    @PostMapping("/mis-pagos")
+    public Pago crearMiPago(@RequestBody Pago pago) {
+        Integer idUsuario = SecurityUtils.obtenerIdUsuarioAutenticado();
+        return pagoService.crearPagoCliente(idUsuario, pago);
+    }
+
+    // Admin
     @PostMapping
     public Pago crearPago(@RequestBody Pago pago) {
         return pagoService.crearPago(pago);
@@ -54,16 +68,14 @@ public class PagoController {
     @GetMapping("/estado-y-metodo")
     public List<Pago> obtenerPorEstadoYMetodo(
             @RequestParam EstadoPago estadoPago,
-            @RequestParam MetodoPago metodoPago
-    ) {
+            @RequestParam MetodoPago metodoPago) {
         return pagoService.obtenerPorEstadoYMetodo(estadoPago, metodoPago);
     }
 
     @GetMapping("/fechas")
     public List<Pago> obtenerEntreFechas(
             @RequestParam LocalDateTime fechaInicio,
-            @RequestParam LocalDateTime fechaFin
-    ) {
+            @RequestParam LocalDateTime fechaFin) {
         return pagoService.obtenerEntreFechas(fechaInicio, fechaFin);
     }
 
@@ -85,8 +97,7 @@ public class PagoController {
     @PatchMapping("/{idPago}/estado")
     public Pago actualizarEstadoPago(
             @PathVariable Integer idPago,
-            @RequestParam EstadoPago estadoPago
-    ) {
+            @RequestParam EstadoPago estadoPago) {
         return pagoService.actualizarEstadoPago(idPago, estadoPago);
     }
 

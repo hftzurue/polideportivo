@@ -2,6 +2,7 @@ package com.polideportivo.polideportivo.entity;
 
 import com.polideportivo.polideportivo.enums.Rol;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "usuario", schema = "polideportivo")
@@ -19,6 +20,7 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String nombreUsuario;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String contrasena;
 

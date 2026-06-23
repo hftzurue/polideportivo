@@ -220,4 +220,128 @@ public class ReservaService {
     private List<EstadoReserva> obtenerEstadosActivos() {
         return List.of(EstadoReserva.PENDIENTE, EstadoReserva.CONFIRMADA);
     }
+
+    public Reserva registrarReservaCliente(Integer idUsuario, Reserva reserva) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Usuario no encontrado"
+                ));
+
+        reserva.setUsuario(usuario);
+
+        // Evita que el cliente fuerce estados o montos
+        reserva.setEstado(EstadoReserva.PENDIENTE);
+        reserva.setMontoTotal(null);
+        reserva.setFechaCreacion(null);
+
+        return registrarReserva(reserva);
+    }
+
+    public Reserva cancelarReservaCliente(Integer idUsuario, Integer idReserva) {
+        Reserva reserva = reservaRepository.findByIdReservaAndUsuario_IdUsuario(idReserva, idUsuario)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Reserva no encontrada"
+                ));
+
+        if (reserva.getEstado() == EstadoReserva.CANCELADA) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La reserva ya está cancelada");
+        }
+
+        if (reserva.getEstado() == EstadoReserva.FINALIZADA) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede cancelar una reserva finalizada");
+        }
+
+        reserva.setEstado(EstadoReserva.CANCELADA);
+        return reservaRepository.save(reserva);
+    }
+
+    public Reserva actualizarReservaCliente(Integer idUsuario, Integer idReserva, Reserva reserva) {
+        Reserva existente = reservaRepository.findByIdReservaAndUsuario_IdUsuario(idReserva, idUsuario)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Reserva no encontrada"
+                ));
+
+        if (existente.getEstado() == EstadoReserva.CANCELADA ||
+                existente.getEstado() == EstadoReserva.FINALIZADA) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "No se puede editar una reserva cancelada o finalizada"
+            );
+        }
+
+        if (reserva.getCantidadPersonas() != null) {
+            existente.setCantidadPersonas(reserva.getCantidadPersonas());
+        }
+
+        if (reserva.getFechaReserva() != null) {
+            existente.setFechaReserva(reserva.getFechaReserva());
+        }
+
+        if (reserva.getHoraInicio() != null) {
+            existente.setHoraInicio(reserva.getHoraInicio());
+        }
+
+        if (reserva.getHoraFin() != null) {
+            existente.setHoraFin(reserva.getHoraFin());
+        }
+
+        // No permitir que cliente cambie usuario, espacio, estado ni monto desde aquí
+        return revalidarYGuardarReservaExistente(existente);
+    }
+
+    private Reserva revalidarYGuardarReservaExistente(Reserva reserva) {
+        Espacio espacio = reserva.getEspacio();
+
+        if (!espacio.getActivo()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El espacio no está activo");
+        }
+
+        if (reserva.getCantidadPersonas() == null || reserva.getCantidadPersonas() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cantidad de personas debe ser mayor a 0");
+        }
+
+        if (reserva.getCantidadPersonas() > espacio.getCapacidad()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cantidad de personas supera la capacidad del espacio");
+        }
+
+        if (reserva.getFechaReserva() == null || reserva.getHoraInicio() == null || reserva.getHoraFin() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fecha y horario son obligatorios");
+        }
+
+        if (!reserva.getHoraInicio().isBefore(reserva.getHoraFin())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La hora de inicio debe ser menor que la hora de fin");
+        }
+
+        if (reserva.getHoraInicio().isBefore(espacio.getHoraApertura())
+                || reserva.getHoraFin().isAfter(espacio.getHoraCierre())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La reserva está fuera del horario permitido del espacio");
+        }
+
+        List<EstadoReserva> estadosQueBloquean = List.of(
+                EstadoReserva.PENDIENTE,
+                EstadoReserva.CONFIRMADA
+        );
+
+        Long conflictos = reservaRepository.contarReservasEnConflicto(
+                espacio.getIdEspacio(),
+                reserva.getFechaReserva(),
+                reserva.getHoraInicio(),
+                reserva.getHoraFin(),
+                estadosQueBloquean
+        );
+
+        // OJO: este query se cuenta a sí misma. Si vas a editar horario, conviene crear query excluyendo idReserva.
+        // Por ahora, si editás una reserva existente, podrías necesitar ese ajuste.
+        if (conflictos > 1) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una reserva en ese horario");
+        }
+
+        long horas = ChronoUnit.HOURS.between(reserva.getHoraInicio(), reserva.getHoraFin());
+        reserva.setMontoTotal(espacio.getPrecioHora().multiply(BigDecimal.valueOf(horas)));
+
+        return reservaRepository.save(reserva);
+    }
 }

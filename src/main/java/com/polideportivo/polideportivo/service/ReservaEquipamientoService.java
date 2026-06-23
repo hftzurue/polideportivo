@@ -164,4 +164,60 @@ public class ReservaEquipamientoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La cantidad debe ser mayor a 0");
         }
     }
+
+    public ReservaEquipamiento agregarEquipamientoAReservaCliente(
+            Integer idUsuario,
+            ReservaEquipamiento reservaEquipamiento
+    ) {
+        if (reservaEquipamiento.getReserva() == null ||
+                reservaEquipamiento.getReserva().getIdReserva() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La reserva es obligatoria");
+        }
+
+        Reserva reserva = reservaRepository.findByIdReservaAndUsuario_IdUsuario(
+                reservaEquipamiento.getReserva().getIdReserva(),
+                idUsuario
+        ).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Reserva no encontrada"
+        ));
+
+        reservaEquipamiento.setReserva(reserva);
+
+        return agregarEquipamientoAReserva(reservaEquipamiento);
+    }
+
+    public List<ReservaEquipamiento> obtenerEquipamientosDeReservaCliente(Integer idUsuario, Integer idReserva) {
+        reservaRepository.findByIdReservaAndUsuario_IdUsuario(idReserva, idUsuario)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Reserva no encontrada"
+                ));
+
+        return reservaEquipamientoRepository.findByReserva_IdReserva(idReserva);
+    }
+
+    public ReservaEquipamiento actualizarCantidadCliente(
+            Integer idUsuario,
+            Integer idReservaEquipamiento,
+            Integer nuevaCantidad
+    ) {
+        ReservaEquipamiento existente = obtenerPorId(idReservaEquipamiento);
+
+        if (!existente.getReserva().getUsuario().getIdUsuario().equals(idUsuario)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro no encontrado");
+        }
+
+        return actualizarCantidad(idReservaEquipamiento, nuevaCantidad);
+    }
+
+    public void eliminarPorIdCliente(Integer idUsuario, Integer idReservaEquipamiento) {
+        ReservaEquipamiento existente = obtenerPorId(idReservaEquipamiento);
+
+        if (!existente.getReserva().getUsuario().getIdUsuario().equals(idUsuario)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro no encontrado");
+        }
+
+        reservaEquipamientoRepository.delete(existente);
+    }
 }

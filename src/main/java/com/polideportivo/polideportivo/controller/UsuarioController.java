@@ -1,6 +1,8 @@
 package com.polideportivo.polideportivo.controller;
 
 import com.polideportivo.polideportivo.entity.Usuario;
+import com.polideportivo.polideportivo.enums.Rol;
+import com.polideportivo.polideportivo.security.SecurityUtils;
 import com.polideportivo.polideportivo.service.UsuarioService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +17,31 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    // Registro público
     @PostMapping
     public Usuario crearUsuario(@RequestBody Usuario usuario) {
+        usuario.setRol(Rol.CLIENTE); // evita que cualquiera se registre como admin
         return usuarioService.crearUsuario(usuario);
     }
 
+    // Perfil propio
+    @GetMapping("/me")
+    public Usuario obtenerMiPerfil() {
+        Integer idUsuario = SecurityUtils.obtenerIdUsuarioAutenticado();
+        return usuarioService.obtenerPorId(idUsuario);
+    }
+
+    @PatchMapping("/me")
+    public Usuario actualizarMiPerfil(@RequestBody Usuario usuario) {
+        Integer idUsuario = SecurityUtils.obtenerIdUsuarioAutenticado();
+
+        usuario.setRol(null);
+        usuario.setContrasena(null);
+
+        return usuarioService.actualizarUsuarioParcial(idUsuario, usuario);
+    }
+
+    // Admin
     @GetMapping
     public List<Usuario> obtenerTodos() {
         return usuarioService.obtenerTodos();

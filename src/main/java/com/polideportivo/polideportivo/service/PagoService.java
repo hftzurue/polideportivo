@@ -173,4 +173,22 @@ public class PagoService {
 
         return reserva.getEspacio().getPrecioHora().multiply(horas);
     }
+
+    public Pago crearPagoCliente(Integer idUsuario, Pago pago) {
+        if (pago.getReserva() == null || pago.getReserva().getIdReserva() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La reserva es obligatoria");
+        }
+
+        reservaRepository.findByIdReservaAndUsuario_IdUsuario(
+                pago.getReserva().getIdReserva(),
+                idUsuario
+        ).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Reserva no encontrada"
+        ));
+
+        return crearPago(pago);
+    }
+
+
 }

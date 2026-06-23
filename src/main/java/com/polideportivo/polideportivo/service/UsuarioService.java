@@ -4,6 +4,7 @@ import com.polideportivo.polideportivo.entity.Usuario;
 import com.polideportivo.polideportivo.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -14,16 +15,30 @@ import java.util.List;
 public class UsuarioService{
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(
+            UsuarioRepository usuarioRepository,
+            PasswordEncoder passwordEncoder) {
+
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Usuario crearUsuario(Usuario usuario) {
-        usuarioRepository.findByCorreoIgnoreCase(usuario.getCorreo())
-                .ifPresent(u -> {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT,"El correo ya está registrado");
-                });
+        if (usuarioRepository.existsByCorreoIgnoreCase(usuario.getCorreo())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Ya existe un usuario con ese correo");
+        }
+
+        if (usuarioRepository.existsByNombreUsuarioIgnoreCase(usuario.getNombreUsuario())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Ya existe ese nombre de usuario");
+        }
+
+        usuario.setContrasena(
+                passwordEncoder.encode(usuario.getContrasena())
+        );
 
         return usuarioRepository.save(usuario);
     }
