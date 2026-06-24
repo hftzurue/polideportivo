@@ -32,4 +32,5 @@ public interface EspacioRepository extends JpaRepository<Espacio, Integer> {
             LocalTime horaFin
     );
     boolean existsByNombreIgnoreCase(String nombre);
+    boolean existsByDisciplina_IdDisciplina(Integer idDisciplina);
 }

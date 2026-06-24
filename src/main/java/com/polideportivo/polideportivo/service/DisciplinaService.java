@@ -2,6 +2,7 @@ package com.polideportivo.polideportivo.service;
 
 import com.polideportivo.polideportivo.entity.Disciplina;
 import com.polideportivo.polideportivo.repository.DisciplinaRepository;
+import com.polideportivo.polideportivo.repository.EspacioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +14,11 @@ import java.util.List;
 @Transactional
 public class DisciplinaService {
     private final DisciplinaRepository disciplinaRepository;
+    private final EspacioRepository espacioRepository;
 
-    public DisciplinaService(DisciplinaRepository disciplinaRepository) {
+    public DisciplinaService(DisciplinaRepository disciplinaRepository, EspacioRepository espacioRepository) {
         this.disciplinaRepository = disciplinaRepository;
+        this.espacioRepository = espacioRepository;
     }
 
     public Disciplina crearDisciplina(Disciplina disciplina) {
@@ -79,6 +82,13 @@ public class DisciplinaService {
 
     public void eliminarDisciplina(Integer id) {
         Disciplina disciplina = obtenerPorId(id);
+        if (espacioRepository.existsByDisciplina_IdDisciplina(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "No se pudo eliminar la disciplina porque existen espacios asociados a esta"
+            );
+        }
+
         disciplinaRepository.delete(disciplina);
     }
 }
