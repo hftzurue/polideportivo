@@ -391,9 +391,10 @@ a:hover {
 }
 
 .auth-theme-toggle {
-    position: relative;
+    position: absolute;
+    top: 46px;
+    right: 46px;
     z-index: 1;
-    justify-self: start;
     width: fit-content;
 }
 
@@ -1410,6 +1411,40 @@ a:hover {
     font-size: 0.78rem;
 }
 
+.admin-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding-top: 12px;
+}
+
+.admin-pagination button {
+    min-width: 38px;
+    min-height: 38px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--green-dark);
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.admin-pagination button:hover,
+.admin-pagination button.is-active {
+    border-color: var(--green);
+    background: rgba(31, 138, 76, 0.12);
+    color: var(--green);
+}
+
+.admin-pagination button.is-active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(31, 138, 76, 0.24);
+}
+
 .admin-dashboard-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1497,10 +1532,18 @@ html[data-theme="dark"] .field input,
 html[data-theme="dark"] .field select,
 html[data-theme="dark"] .field textarea,
 html[data-theme="dark"] .secondary-inline-button,
-html[data-theme="dark"] .admin-list-switch {
+html[data-theme="dark"] .admin-list-switch,
+html[data-theme="dark"] .admin-pagination button {
     background: #111b17;
     border-color: var(--line);
     color: var(--text);
+}
+
+html[data-theme="dark"] .admin-pagination button.is-active,
+.admin-pagination button.is-active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
 }
 
 html[data-theme="dark"] .home-summary {

@@ -5,6 +5,7 @@ const API_HEADERS = {
 const TOKEN_KEY = "polideportivoToken";
 const USER_KEY = "polideportivoUser";
 const THEME_KEY = "polideportivoTheme";
+const ADMIN_PAGE_SIZE = 10;
 
 function applyStoredTheme() {
     const theme = localStorage.getItem(THEME_KEY) || "light";
@@ -373,12 +374,18 @@ function askPaymentMethod() {
     dialog.querySelector("[data-dialog-kicker]").textContent = "Pago de reserva";
     dialog.querySelector("[data-dialog-title]").textContent = "Selecciona el método de pago";
     dialog.querySelector("[data-dialog-message]").textContent = "Elige cómo quieres registrar el pago de esta reserva.";
-    actions.innerHTML = methods
-        .map((method) => `<button class="payment-choice" type="button" data-payment-method="${method}">${method}</button>`)
-        .join("");
+    actions.innerHTML = `
+        ${methods.map((method) => `<button class="payment-choice" type="button" data-payment-method="${method}">${method}</button>`).join("")}
+        <button class="secondary-inline-button dialog-button" type="button" data-payment-cancel>Cancelar</button>
+    `;
     dialog.classList.add("is-open");
 
     return new Promise((resolve) => {
+        actions.querySelector("[data-payment-cancel]").addEventListener("click", () => {
+            dialog.classList.remove("is-open");
+            resolve(null);
+        }, { once: true });
+
         actions.querySelectorAll("[data-payment-method]").forEach((button) => {
             button.addEventListener("click", () => {
                 dialog.classList.remove("is-open");
@@ -859,7 +866,7 @@ const adminModules = {
             { name: "horaInicio", label: "Hora inicio", type: "range-time", defaultHour: 8, required: true },
             { name: "horaFin", label: "Hora fin", type: "range-time", defaultHour: 10, required: true },
             { name: "estado", label: "Estado", type: "select", options: ["PENDIENTE", "CONFIRMADA", "CANCELADA", "FINALIZADA"], required: true },
-            { name: "montoTotal", label: "Monto total", type: "number", step: "0.01", required: true }
+            { name: "montoTotal", label: "Monto total", type: "number", step: "100", required: true }
         ],
         timePairs: [["horaInicio", "horaFin"]],
         toPayload: (data) => ({
@@ -1279,7 +1286,13 @@ function renderAdminList(moduleKey, module, items) {
         return;
     }
 
-    list.innerHTML = items.map((item) => `
+    const page = Math.max(1, Number(list.dataset.page || 1));
+    const totalPages = Math.max(1, Math.ceil(items.length / ADMIN_PAGE_SIZE));
+    const currentPage = Math.min(page, totalPages);
+    const pageItems = items.slice((currentPage - 1) * ADMIN_PAGE_SIZE, currentPage * ADMIN_PAGE_SIZE);
+
+    list.dataset.page = String(currentPage);
+    list.innerHTML = pageItems.map((item) => `
         <article class="admin-record ${module.className ? module.className(item) : ""}" data-admin-record="${item[module.id]}">
             <div>
                 <span class="status-pill">#${item[module.id]}</span>
@@ -1299,6 +1312,17 @@ function renderAdminList(moduleKey, module, items) {
             </div>
         </article>
     `).join("");
+
+    if (totalPages > 1) {
+        list.insertAdjacentHTML("beforeend", `
+            <nav class="admin-pagination" aria-label="Páginas de registros">
+                ${Array.from({ length: totalPages }, (_, index) => {
+                    const pageNumber = index + 1;
+                    return `<button class="${pageNumber === currentPage ? "is-active" : ""}" type="button" data-admin-page="${pageNumber}">${pageNumber}</button>`;
+                }).join("")}
+            </nav>
+        `);
+    }
 }
 
 async function loadAdminModule(moduleKey, sources) {
@@ -1317,6 +1341,7 @@ async function loadAdminModule(moduleKey, sources) {
         renderAdminForm(moduleKey, module, sources);
         renderAdminList(moduleKey, module, sortedItems);
         setupAdminRecordActions(moduleKey, module, sortedItems, sources);
+        setupAdminPagination(moduleKey, module, sortedItems, sources);
     } catch (error) {
         setMessage(message, "error", error.message);
     }
@@ -1380,6 +1405,17 @@ function setupAdminRecordActions(moduleKey, module, items, sources) {
     });
 }
 
+function setupAdminPagination(moduleKey, module, items, sources) {
+    document.querySelectorAll("[data-admin-page]").forEach((button) => {
+        button.addEventListener("click", () => {
+            document.querySelector("[data-admin-list]").dataset.page = button.dataset.adminPage;
+            renderAdminList(moduleKey, module, items);
+            setupAdminRecordActions(moduleKey, module, items, sources);
+            setupAdminPagination(moduleKey, module, items, sources);
+        });
+    });
+}
+
 async function setupAdminPage() {
     const form = document.querySelector("[data-admin-form]");
     const refreshButton = document.querySelector("[data-admin-refresh]");
@@ -1404,6 +1440,7 @@ async function setupAdminPage() {
     document.querySelectorAll("[data-admin-module]").forEach((button) => {
         button.addEventListener("click", async () => {
             currentModule = button.dataset.adminModule;
+            document.querySelector("[data-admin-list]").dataset.page = "1";
             await loadAdminModule(currentModule, sources);
         });
     });
@@ -1737,6 +1774,10 @@ function setupReservationActions(enriched, message) {
         payButton?.addEventListener("click", async () => {
             try {
                 const metodoPago = await askPaymentMethod();
+                if (!metodoPago) {
+                    return;
+                }
+
                 await payMyReservation(idReserva, metodoPago);
                 setMessage(message, "success", "Pago registrado. La reserva quedó confirmada.");
                 await loadReservationsView();
