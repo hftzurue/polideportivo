@@ -59,7 +59,7 @@ public class ReservaService {
         );
 
         //Lista de reservas que tienen conflictos con la reserva que se quiere solicitar
-        Long ReservasConflictos = reservaRepository.contarReservasEnConflicto(idEspacio, reserva.getFechaReserva(), reserva.getHoraInicio(), reserva.getHoraFin(), estadosQueBloquean);
+        Long ReservasConflictos = reservaRepository.contarReservasPorRangoHora(idEspacio, reserva.getFechaReserva(), reserva.getHoraInicio(), reserva.getHoraFin(), estadosQueBloquean);
 
         if (ReservasConflictos > 0) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe una reserva en ese horario");
@@ -325,7 +325,7 @@ public class ReservaService {
                 EstadoReserva.CONFIRMADA
         );
 
-        Long conflictos = reservaRepository.contarReservasEnConflicto(
+        Long conflictos = reservaRepository.contarReservasPorRangoHora(
                 espacio.getIdEspacio(),
                 reserva.getFechaReserva(),
                 reserva.getHoraInicio(),

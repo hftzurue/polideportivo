@@ -84,7 +84,7 @@ public class UsuarioService{
         if (usuario.getSegundoApellido() != null) {
             existente.setSegundoApellido(usuario.getSegundoApellido());
         }
-        if (usuarioRepository.existsByCorreoIgnoreCase(usuario.getCorreo()) && !usuario.getCorreo().equals(existente.getCorreo())) {
+        if (usuarioRepository.existsByCorreoIgnoreCase(usuario.getCorreo()) && !usuario.getCorreo().equalsIgnoreCase(existente.getCorreo())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "Ya existe un usuario con ese correo");
         }
