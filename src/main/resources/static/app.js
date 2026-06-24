@@ -299,6 +299,30 @@ function setupAdminSwitches(form) {
     });
 }
 
+function setupNonNegativeNumberInputs(scope = document) {
+    scope.querySelectorAll("input[type='number'][min]").forEach((input) => {
+        input.addEventListener("input", () => {
+            if (input.value !== "" && Number(input.value) < Number(input.min)) {
+                input.value = input.min;
+            }
+        });
+    });
+}
+
+function validateAdminNumbers(module, data) {
+    const invalidField = module.fields.find((field) => {
+        if (field.type !== "number" || field.min == null || data[field.name] === "") {
+            return false;
+        }
+
+        return Number(data[field.name]) < Number(field.min);
+    });
+
+    if (invalidField) {
+        throw new Error(`${invalidField.label} no puede ser menor que ${invalidField.min}.`);
+    }
+}
+
 function ensureAppDialog() {
     let dialog = document.querySelector("[data-app-dialog]");
 
@@ -828,10 +852,10 @@ const adminModules = {
             { name: "nombre", label: "Nombre", type: "text", required: true },
             { name: "descripcion", label: "Descripción", type: "textarea" },
             { name: "idDisciplina", label: "Disciplina", type: "select", source: "disciplinas", required: true },
-            { name: "capacidad", label: "Capacidad", type: "number", required: true },
+            { name: "capacidad", label: "Capacidad", type: "number", min: "1", step: "1", required: true },
             { name: "horaApertura", label: "Hora apertura", type: "range-time", defaultHour: 6, required: true },
             { name: "horaCierre", label: "Hora cierre", type: "range-time", defaultHour: 22, required: true },
-            { name: "precioHora", label: "Precio por hora", type: "number", step: "0.01", required: true },
+            { name: "precioHora", label: "Precio por hora", type: "number", min: "0", step: "100", required: true },
             { name: "activo", label: "Activo", type: "checkbox" }
         ],
         timePairs: [["horaApertura", "horaCierre"]],
@@ -861,12 +885,12 @@ const adminModules = {
         fields: [
             { name: "idUsuario", label: "Usuario", type: "select", source: "usuarios", required: true },
             { name: "idEspacio", label: "Espacio", type: "select", source: "espacios", required: true },
-            { name: "cantidadPersonas", label: "Personas", type: "number", required: true },
+            { name: "cantidadPersonas", label: "Personas", type: "number", min: "1", step: "1", required: true },
             { name: "fechaReserva", label: "Fecha", type: "date", required: true },
             { name: "horaInicio", label: "Hora inicio", type: "range-time", defaultHour: 8, required: true },
             { name: "horaFin", label: "Hora fin", type: "range-time", defaultHour: 10, required: true },
             { name: "estado", label: "Estado", type: "select", options: ["PENDIENTE", "CONFIRMADA", "CANCELADA", "FINALIZADA"], required: true },
-            { name: "montoTotal", label: "Monto total", type: "number", step: "100", required: true }
+            { name: "montoTotal", label: "Monto total", type: "number", min: "0", step: "100", required: true }
         ],
         timePairs: [["horaInicio", "horaFin"]],
         toPayload: (data) => ({
@@ -910,7 +934,7 @@ const adminModules = {
         id: "idEquipamiento",
         fields: [
             { name: "nombre", label: "Nombre", type: "text", required: true },
-            { name: "cantidadTotal", label: "Cantidad total", type: "number", required: true },
+            { name: "cantidadTotal", label: "Cantidad total", type: "number", min: "0", step: "1", required: true },
             { name: "idDisciplina", label: "Disciplina", type: "select", source: "disciplinas", required: true },
             { name: "activo", label: "Activo", type: "checkbox" }
         ],
@@ -939,8 +963,7 @@ const adminModules = {
             { name: "segundoApellido", label: "Segundo apellido", type: "text" },
             { name: "correo", label: "Correo", type: "email", required: true },
             { name: "nombreUsuario", label: "Usuario", type: "text", required: true, createOnly: true },
-            { name: "contrasena", label: "Contraseña", type: "password", createOnly: true },
-            { name: "rol", label: "Rol", type: "select", options: ["CLIENTE", "ADMINISTRADOR"], editOnly: true }
+            { name: "contrasena", label: "Contraseña", type: "password", createOnly: true }
         ],
         toPayload: (data, mode) => ({
             nombre: data.nombre,
@@ -950,9 +973,7 @@ const adminModules = {
             ...(mode === "create" ? {
                 nombreUsuario: data.nombreUsuario,
                 contrasena: data.contrasena || "123456"
-            } : {
-                rol: data.rol
-            })
+            } : {})
         }),
         sort: (a, b) => {
             const roleOrder = { ADMINISTRADOR: 0, CLIENTE: 1 };
@@ -1247,10 +1268,13 @@ function renderAdminField(field, value, sources, mode) {
         `;
     }
 
+    const min = field.min != null ? ` min="${field.min}"` : "";
+    const step = field.step != null ? ` step="${field.step}"` : "";
+
     return `
         <label class="field">
             <span>${field.label}</span>
-            <input name="${field.name}" type="${field.type}" value="${currentValue}" step="${field.step || ""}" ${required}>
+            <input name="${field.name}" type="${field.type}" value="${currentValue}"${min}${step} ${required}>
         </label>
     `;
 }
@@ -1276,6 +1300,7 @@ function renderAdminForm(moduleKey, module, sources, item = null) {
 
     (module.timePairs || []).forEach(([startName, endName]) => setupAdminTimeRangePair(form, startName, endName));
     setupAdminSwitches(form);
+    setupNonNegativeNumberInputs(form);
 }
 
 function renderAdminList(moduleKey, module, items) {
@@ -1463,6 +1488,8 @@ async function setupAdminPage() {
         const id = form.dataset.recordId;
 
         try {
+            validateAdminNumbers(module, data);
+
             if (mode === "create") {
                 const payload = module.createPayload ? module.createPayload(data) : module.toPayload(data, "create");
                 await adminCreate(module.endpoint, payload);
@@ -1525,6 +1552,7 @@ async function setupSpacesPage() {
         return;
     }
 
+    setupNonNegativeNumberInputs(form);
     setupTimeRangePair(form, "filterInicio", "filterFin");
 
     try {

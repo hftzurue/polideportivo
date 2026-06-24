@@ -68,7 +68,6 @@ public class UsuarioService{
         existente.setPrimerApellido(usuario.getPrimerApellido());
         existente.setSegundoApellido(usuario.getSegundoApellido());
         existente.setCorreo(usuario.getCorreo());
-        existente.setRol(usuario.getRol());
 
         return usuarioRepository.save(existente);
     }
@@ -91,9 +90,6 @@ public class UsuarioService{
         }
         if (usuario.getCorreo() != null) {
             existente.setCorreo(usuario.getCorreo());
-        }
-        if (usuario.getRol() != null) {
-            existente.setRol(usuario.getRol());
         }
 
         return usuarioRepository.save(existente);
