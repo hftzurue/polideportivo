@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | Polideportivo</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <main class="auth-page">
+        <section class="auth-hero" aria-label="Polideportivo">
+            <div class="brand">
+                <span class="brand-mark">P</span>
+                <span>Polideportivo</span>
+            </div>
+            <button class="theme-toggle auth-theme-toggle" type="button" data-theme-toggle>Modo oscuro</button>
+
+            <div class="hero-copy">
+                <h1>Tu deporte empieza aquí.</h1>
+                <p>Crea tu cuenta de cliente para consultar disciplinas, reservar espacios y participar en las actividades del polideportivo.</p>
+            </div>
+
+            <div class="sport-strip" aria-hidden="true">
+                <div class="sport-tile">
+                    <strong>Reservas</strong>
+                    <span>Acceso preparado para el flujo de espacios.</span>
+                </div>
+                <div class="sport-tile">
+                    <strong>Equipos</strong>
+                    <span>Base lista para préstamo deportivo.</span>
+                </div>
+                <div class="sport-tile">
+                    <strong>Pagos</strong>
+                    <span>Operaciones protegidas y seguras en todo momento.</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="auth-main">
+            <div class="auth-panel">
+                <header>
+                    <p class="eyebrow">Nuevo usuario</p>
+                    <h2>Crear cuenta</h2>
+                    <p>Regístrate como cliente del polideportivo.</p>
+                </header>
+
+                <form class="form-grid" data-register-form>
+                    <div class="form-message" data-form-message role="status" aria-live="polite"></div>
+
+                    <div class="field">
+                        <label for="nombre">Nombre</label>
+                        <input id="nombre" name="nombre" type="text" autocomplete="given-name" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="primerApellido">Primer apellido</label>
+                            <input id="primerApellido" name="primerApellido" type="text" autocomplete="family-name" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="segundoApellido">Segundo apellido</label>
+                            <input id="segundoApellido" name="segundoApellido" type="text" autocomplete="additional-name">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="correo">Correo electrónico</label>
+                        <input id="correo" name="correo" type="email" autocomplete="email" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="nombreUsuarioRegistro">Nombre de usuario</label>
+                        <input id="nombreUsuarioRegistro" name="nombreUsuario" type="text" autocomplete="username" required>
+                        <p class="field-hint">Este será el dato que usarás para iniciar sesión.</p>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="contrasenaRegistro">Contraseña</label>
+                            <input id="contrasenaRegistro" name="contrasena" type="password" autocomplete="new-password" minlength="6" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="confirmarContrasena">Confirmar contraseña</label>
+                            <input id="confirmarContrasena" name="confirmarContrasena" type="password" autocomplete="new-password" minlength="6" required>
+                        </div>
+                    </div>
+
+                    <button class="primary-button" type="submit">Crear cuenta</button>
+                </form>
+
+                <p class="auth-switch">¿Ya tienes cuenta? <a href="/login">Iniciar sesión</a></p>
+            </div>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

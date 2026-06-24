@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi perfil | Polideportivo</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-requires-auth="true">
+    <main class="app-page">
+        <header class="home-nav app-nav">
+            <a class="brand home-brand" href="/inicio" aria-label="Inicio Polideportivo">
+                <span class="brand-mark">P</span>
+                <span>Polideportivo</span>
+            </a>
+            <nav class="nav-tabs" aria-label="Navegación principal">
+                <a class="nav-tab" href="/inicio">Inicio</a>
+                <a class="nav-tab" href="/disciplinas-vista">Disciplinas</a>
+                <a class="nav-tab" href="/espacios-disponibles">Espacios</a>
+                <a class="nav-tab" href="/mis-reservas">Mis reservas</a>
+                <a class="nav-tab is-active" href="/mi-perfil">Mi perfil</a>
+            </nav>
+            <span class="role-badge" data-role-badge hidden>Administrador</span>
+            <button class="logout-button" type="button" data-logout>Cerrar sesión</button>
+        </header>
+
+        <section class="content-shell">
+            <div class="page-heading">
+                <p class="eyebrow">Cuenta</p>
+                <h1>Mi perfil</h1>
+                <p>Actualiza tus datos personales y revisa la información asociada a tu cuenta.</p>
+            </div>
+
+            <form class="profile-panel" data-profile-form>
+                <div class="form-message" data-profile-message role="status" aria-live="polite"></div>
+                <div class="form-row">
+                    <label class="field">
+                        <span>Nombre</span>
+                        <input name="nombre" type="text" required>
+                    </label>
+                    <label class="field">
+                        <span>Primer apellido</span>
+                        <input name="primerApellido" type="text" required>
+                    </label>
+                </div>
+                <div class="form-row">
+                    <label class="field">
+                        <span>Segundo apellido</span>
+                        <input name="segundoApellido" type="text">
+                    </label>
+                    <label class="field">
+                        <span>Correo</span>
+                        <input name="correo" type="email" required>
+                    </label>
+                </div>
+                <label class="field">
+                    <span>Nombre de usuario</span>
+                    <input name="nombreUsuario" type="text" readonly>
+                </label>
+                <button class="primary-button" type="submit">Guardar cambios</button>
+            </form>
+
+            <section class="admin-users-panel" data-admin-users hidden>
+                <div class="page-heading compact-heading">
+                    <p class="eyebrow">Administración</p>
+                    <h1>Usuarios</h1>
+                    <p>Busca, revisa, actualiza o elimina usuarios registrados.</p>
+                </div>
+
+                <form class="filter-panel user-search-panel" data-user-search-form>
+                    <label class="field">
+                        <span>Buscar por nombre</span>
+                        <input name="nombre" type="search" placeholder="Ej. Maria">
+                    </label>
+                    <label class="field">
+                        <span>Buscar por correo</span>
+                        <input name="correo" type="email" placeholder="correo@ejemplo.com">
+                    </label>
+                    <button class="primary-button compact-button" type="submit">Buscar</button>
+                    <button class="secondary-inline-button" type="button" data-load-users>Ver todos</button>
+                </form>
+
+                <div class="form-message" data-users-message role="status" aria-live="polite"></div>
+                <section class="users-list" data-users-list></section>
+            </section>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio | Polideportivo</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-requires-auth="true">
+    <main class="home-page">
+        <header class="home-nav">
+            <a class="brand home-brand" href="/inicio" aria-label="Inicio Polideportivo">
+                <span class="brand-mark">P</span>
+                <span>Polideportivo</span>
+            </a>
+
+            <nav class="nav-tabs" aria-label="Navegación principal">
+                <a class="nav-tab is-active" href="/inicio">Inicio</a>
+                <a class="nav-tab" href="/disciplinas-vista">Disciplinas</a>
+                <a class="nav-tab" href="/espacios-disponibles">Espacios</a>
+                <a class="nav-tab" href="/mis-reservas">Mis reservas</a>
+                <a class="nav-tab" href="/mi-perfil">Mi perfil</a>
+                <a class="nav-tab" href="/admin" data-admin-only hidden>Admin</a>
+            </nav>
+
+            <span class="role-badge" data-role-badge hidden>Administrador</span>
+            <button class="logout-button" type="button" data-logout>Cerrar sesión</button>
+        </header>
+
+        <section class="home-hero">
+            <div class="home-hero-content">
+                <p class="eyebrow">Panel principal</p>
+                <h1>Organiza tu actividad deportiva desde un solo lugar</h1>
+                <p>Consulta espacios, prepara reservas y mantén el control de tus actividades dentro del polideportivo.</p>
+            </div>
+
+            <aside class="home-summary" aria-label="Resumen del usuario">
+                <span>Bienvenido</span>
+                <strong data-user-name>Usuario</strong>
+                <p>Desde aquí puedes moverte por las secciones principales del polideportivo.</p>
+            </aside>
+
+            <div class="home-actions">
+                <a class="home-primary-action featured-action" href="/espacios-disponibles">Crear reserva</a>
+            </div>
+        </section>
+
+        <section class="quick-access" aria-label="Accesos rápidos">
+            <article class="quick-card">
+                <span class="quick-icon">01</span>
+                <h2>Disciplinas</h2>
+                <p>Explora las actividades deportivas disponibles.</p>
+                <a href="/disciplinas-vista" aria-label="Ver disciplinas"></a>
+            </article>
+            <article class="quick-card">
+                <span class="quick-icon">02</span>
+                <h2>Espacios</h2>
+                <p>Consulta canchas, salas y áreas del polideportivo.</p>
+                <a href="/espacios-disponibles" aria-label="Ver espacios"></a>
+            </article>
+            <article class="quick-card">
+                <span class="quick-icon">03</span>
+                <h2>Reservas</h2>
+                <p>Administra horarios y solicitudes de uso.</p>
+                <a href="/mis-reservas" aria-label="Ver mis reservas"></a>
+            </article>
+            <article class="quick-card">
+                <span class="quick-icon">04</span>
+                <h2>Pagos</h2>
+                <p>Revisa el estado de pagos asociados.</p>
+            </article>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

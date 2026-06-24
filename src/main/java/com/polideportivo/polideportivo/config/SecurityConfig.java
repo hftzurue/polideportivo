@@ -35,6 +35,39 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET,
+                                "/login",
+                                "/registro",
+                                "/inicio",
+                                "/disciplinas-vista",
+                                "/espacios-disponibles",
+                                "/reservar",
+                                "/mis-reservas",
+                                "/mi-perfil",
+                                "/admin",
+                                "/admin-disciplina",
+                                "/admin-espacio",
+                                "/admin-reserva",
+                                "/admin-usuarios",
+                                "/admin-pagos",
+                                "/templates/login.html",
+                                "/templates/registro.html",
+                                "/templates/inicio.html",
+                                "/templates/disciplinas.html",
+                                "/templates/espacios.html",
+                                "/templates/reservar.html",
+                                "/templates/mis-reservas.html",
+                                "/templates/mi-perfil.html",
+                                "/templates/admin.html",
+                                "/templates/admin-disciplina.html",
+                                "/templates/admin-espacio.html",
+                                "/templates/admin-reserva.html",
+                                "/templates/admin-usuarios.html",
+                                "/templates/admin-pagos.html",
+                                "/app.js",
+                                "/styles.css",
+                                "/imagenes/inicio-deportes.svg"
+                        ).permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios", "/usuarios/", "/usuarios/**").permitAll()
 
@@ -42,9 +75,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/espacios/**").hasAnyRole("ADMINISTRADOR", "CLIENTE")
                         .requestMatchers(HttpMethod.GET, "/equipamientos/**").hasAnyRole("ADMINISTRADOR", "CLIENTE")
 
-                        .requestMatchers("/usuarios/me/**").hasAnyRole("ADMINISTRADOR", "CLIENTE")
+                        .requestMatchers("/usuarios/me", "/usuarios/me/**").hasAnyRole("ADMINISTRADOR", "CLIENTE")
                         .requestMatchers("/reservas/mis-reservas/**").hasRole("CLIENTE")
                         .requestMatchers("/pagos/mis-pagos/**").hasRole("CLIENTE")
+                        .requestMatchers("/reserva-equipamientos/mis-equipamientos/**").hasRole("CLIENTE")
+                        .requestMatchers("/reserva-equipamientos/mis-reservas/**").hasRole("CLIENTE")
                         .requestMatchers("/reserva-equipamientos/mis-**").hasRole("CLIENTE")
 
                         .requestMatchers("/usuarios/**").hasRole("ADMINISTRADOR")

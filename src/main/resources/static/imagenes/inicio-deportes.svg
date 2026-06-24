@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-label="Complejo polideportivo">
+    <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#0f5b4a"/>
+            <stop offset="0.52" stop-color="#176a78"/>
+            <stop offset="1" stop-color="#1b3f63"/>
+        </linearGradient>
+        <linearGradient id="grass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#2fa45d"/>
+            <stop offset="1" stop-color="#177044"/>
+        </linearGradient>
+        <linearGradient id="track" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#e67d2f"/>
+            <stop offset="1" stop-color="#be4f36"/>
+        </linearGradient>
+        <radialGradient id="light" cx="58%" cy="18%" r="60%">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </radialGradient>
+    </defs>
+    <rect width="1600" height="1000" fill="url(#sky)"/>
+    <rect width="1600" height="1000" fill="url(#light)"/>
+    <path d="M0 610C240 520 405 570 620 505C860 432 1055 330 1315 390C1455 422 1550 500 1600 555V1000H0Z" fill="#ffffff" opacity="0.09"/>
+
+    <g transform="translate(118 150)">
+        <rect x="0" y="0" width="500" height="315" rx="22" fill="#ffffff" opacity="0.12"/>
+        <rect x="35" y="38" width="430" height="240" rx="10" fill="url(#grass)" opacity="0.92"/>
+        <path d="M35 158H465M250 38V278" stroke="#ffffff" stroke-opacity="0.76" stroke-width="6"/>
+        <circle cx="250" cy="158" r="54" fill="none" stroke="#ffffff" stroke-opacity="0.72" stroke-width="6"/>
+        <rect x="35" y="100" width="62" height="116" fill="none" stroke="#ffffff" stroke-opacity="0.72" stroke-width="5"/>
+        <rect x="403" y="100" width="62" height="116" fill="none" stroke="#ffffff" stroke-opacity="0.72" stroke-width="5"/>
+    </g>
+
+    <g transform="translate(760 165)">
+        <rect x="0" y="0" width="575" height="330" rx="165" fill="url(#track)" opacity="0.94"/>
+        <rect x="58" y="52" width="459" height="226" rx="113" fill="none" stroke="#ffffff" stroke-opacity="0.68" stroke-width="12"/>
+        <rect x="112" y="102" width="351" height="126" rx="63" fill="url(#grass)" opacity="0.95"/>
+        <path d="M288 102V228M112 165H463" stroke="#ffffff" stroke-opacity="0.56" stroke-width="5"/>
+        <path d="M75 86C185 35 390 35 500 86M75 244C185 295 390 295 500 244" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="5"/>
+    </g>
+
+    <g transform="translate(1005 585)">
+        <rect x="0" y="0" width="420" height="250" rx="18" fill="#2d80bd" opacity="0.86"/>
+        <path d="M36 0V250M96 0V250M156 0V250M216 0V250M276 0V250M336 0V250M396 0V250" stroke="#ffffff" stroke-opacity="0.28" stroke-width="5"/>
+        <path d="M0 55C60 35 120 75 180 55C240 35 300 75 360 55C388 45 405 45 420 50M0 128C60 108 120 148 180 128C240 108 300 148 360 128C388 118 405 118 420 123M0 200C60 180 120 220 180 200C240 180 300 220 360 200C388 190 405 190 420 195" fill="none" stroke="#ffffff" stroke-opacity="0.42" stroke-width="6"/>
+    </g>
+
+    <g transform="translate(170 620)">
+        <rect x="0" y="0" width="430" height="260" rx="20" fill="#d77a2f" opacity="0.9"/>
+        <path d="M215 0V260M0 130H430" stroke="#ffffff" stroke-opacity="0.64" stroke-width="6"/>
+        <circle cx="215" cy="130" r="48" fill="none" stroke="#ffffff" stroke-opacity="0.64" stroke-width="6"/>
+        <path d="M38 52H118V208H38ZM312 52H392V208H312Z" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="5"/>
+    </g>
+
+    <circle cx="690" cy="735" r="36" fill="#f4a23c" opacity="0.96"/>
+    <path d="M664 735H716M690 709V761M672 713C688 728 701 746 708 761M708 713C692 728 679 746 672 761" fill="none" stroke="#ffffff" stroke-opacity="0.64" stroke-width="4"/>
+    <circle cx="1395" cy="190" r="48" fill="#ffffff" opacity="0.18"/>
+    <circle cx="1480" cy="245" r="22" fill="#ffffff" opacity="0.14"/>
+</svg>

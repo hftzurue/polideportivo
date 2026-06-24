@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión | Polideportivo</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <main class="auth-page">
+        <section class="auth-hero" aria-label="Polideportivo">
+            <div class="brand">
+                <span class="brand-mark">P</span>
+                <span>Polideportivo</span>
+            </div>
+            <button class="theme-toggle auth-theme-toggle" type="button" data-theme-toggle>Modo oscuro</button>
+
+            <div class="hero-copy">
+                <h1>Bienvenido a la cancha</h1>
+                <p>Gestiona tus reservas, espacios deportivos y actividades desde una experiencia rápida, clara y segura.</p>
+            </div>
+
+            <div class="sport-strip" aria-hidden="true">
+                <div class="sport-tile">
+                    <strong>Eficiencia</strong>
+                    <span>Canchas listas para tus partidos.</span>
+                </div>
+                <div class="sport-tile">
+                    <strong>Organización</strong>
+                    <span>Espacios organizados por horarios.</span>
+                </div>
+                <div class="sport-tile">
+                    <strong>Facilidad</strong>
+                    <span>Reservas y pagos en un solo flujo.</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="auth-main">
+            <div class="auth-panel">
+                <header>
+                    <p class="eyebrow">Acceso seguro</p>
+                    <h2>Iniciar sesión</h2>
+                    <p>Ingresa con tu usuario para acceder a las funciones del sistema.</p>
+                </header>
+
+                <form class="form-grid" data-login-form>
+                    <div class="form-message" data-form-message role="status" aria-live="polite"></div>
+
+                    <div class="field">
+                        <label for="nombreUsuario">Nombre de usuario</label>
+                        <input id="nombreUsuario" name="nombreUsuario" type="text" autocomplete="username" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="contrasena">Contraseña</label>
+                        <input id="contrasena" name="contrasena" type="password" autocomplete="current-password" required>
+                    </div>
+
+                    <button class="primary-button" type="submit">Entrar</button>
+                </form>
+
+                <p class="auth-switch">¿Primera vez aquí? <a href="/registro">Crear cuenta</a></p>
+            </div>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

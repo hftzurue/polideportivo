@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disciplinas | Polideportivo</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-requires-auth="true">
+    <main class="app-page">
+        <header class="home-nav app-nav">
+            <a class="brand home-brand" href="/inicio" aria-label="Inicio Polideportivo">
+                <span class="brand-mark">P</span>
+                <span>Polideportivo</span>
+            </a>
+            <nav class="nav-tabs" aria-label="Navegación principal">
+                <a class="nav-tab" href="/inicio">Inicio</a>
+                <a class="nav-tab is-active" href="/disciplinas-vista">Disciplinas</a>
+                <a class="nav-tab" href="/espacios-disponibles">Espacios</a>
+                <a class="nav-tab" href="/mis-reservas">Mis reservas</a>
+                <a class="nav-tab" href="/mi-perfil">Mi perfil</a>
+            </nav>
+            <span class="role-badge" data-role-badge hidden>Administrador</span>
+            <button class="logout-button" type="button" data-logout>Cerrar sesión</button>
+        </header>
+
+        <section class="content-shell">
+            <div class="page-heading">
+                <p class="eyebrow">Disciplinas</p>
+                <h1>Encuentra tu deporte.</h1>
+                <p>Elige una disciplina para consultar sus espacios disponibles y preparar tu reserva.</p>
+            </div>
+
+            <div class="form-message" data-page-message role="status" aria-live="polite"></div>
+            <section class="disciplines-grid" data-disciplines-list></section>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

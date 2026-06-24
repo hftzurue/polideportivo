@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración | Polideportivo</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-requires-auth="true" data-requires-admin="true">
+    <main class="home-page">
+        <header class="home-nav">
+            <a class="brand home-brand" href="/admin" aria-label="Inicio Polideportivo">
+                <span class="brand-mark">P</span>
+                <span>Polideportivo</span>
+            </a>
+            <nav class="nav-tabs" aria-label="Navegación admin">
+                <a class="nav-tab is-active" href="/admin">Inicio</a>
+                <a class="nav-tab" href="/admin-disciplina">Disciplinas</a>
+                <a class="nav-tab" href="/admin-espacio">Espacios</a>
+                <a class="nav-tab" href="/admin-reserva">Reservas</a>
+                <a class="nav-tab" href="/admin-usuarios">Usuarios</a>
+                <a class="nav-tab" href="/admin-pagos">Pagos</a>
+            </nav>
+            <span class="role-badge" data-role-badge hidden>Administrador</span>
+            <button class="logout-button" type="button" data-logout>Cerrar sesión</button>
+        </header>
+
+        <section class="home-hero">
+            <div class="home-hero-content">
+                <p class="eyebrow">Administración</p>
+                <h1>Gestiona el polideportivo desde un solo lugar</h1>
+                <p>Administra disciplinas, espacios, reservas, usuarios y pagos con acceso directo a cada módulo operativo.</p>
+            </div>
+
+            <aside class="home-summary" aria-label="Resumen del administrador">
+                <span>Administrador</span>
+                <strong data-user-name>Usuario</strong>
+                <p>Desde aquí puedes moverte por las secciones administrativas del sistema.</p>
+            </aside>
+
+            <div class="home-actions">
+                <a class="home-primary-action featured-action" href="/admin-reserva">Gestionar reservas</a>
+            </div>
+        </section>
+
+        <section class="quick-access" aria-label="Accesos rápidos de administración">
+            <article class="quick-card">
+                <span class="quick-icon">01</span>
+                <h2>Disciplinas</h2>
+                <p>Gestiona las disciplinas disponibles.</p>
+                <a href="/admin-disciplina" aria-label="Administrar disciplinas"></a>
+            </article>
+            <article class="quick-card">
+                <span class="quick-icon">02</span>
+                <h2>Espacios</h2>
+                <p>Administra canchas, horarios y precios.</p>
+                <a href="/admin-espacio" aria-label="Administrar espacios"></a>
+            </article>
+            <article class="quick-card">
+                <span class="quick-icon">03</span>
+                <h2>Reservas</h2>
+                <p>Controla solicitudes y estados.</p>
+                <a href="/admin-reserva" aria-label="Administrar reservas"></a>
+            </article>
+            <article class="quick-card">
+                <span class="quick-icon">04</span>
+                <h2>Usuarios</h2>
+                <p>Actualiza perfiles y roles.</p>
+                <a href="/admin-usuarios" aria-label="Administrar usuarios"></a>
+            </article>
+            <article class="quick-card">
+                <span class="quick-icon">05</span>
+                <h2>Pagos</h2>
+                <p>Registra pagos y estados.</p>
+                <a href="/admin-pagos" aria-label="Administrar pagos"></a>
+            </article>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

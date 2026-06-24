@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espacios | Polideportivo</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-requires-auth="true">
+    <main class="app-page">
+        <header class="home-nav app-nav">
+            <a class="brand home-brand" href="/inicio" aria-label="Inicio Polideportivo">
+                <span class="brand-mark">P</span>
+                <span>Polideportivo</span>
+            </a>
+            <nav class="nav-tabs" aria-label="Navegación principal">
+                <a class="nav-tab" href="/inicio">Inicio</a>
+                <a class="nav-tab" href="/disciplinas-vista">Disciplinas</a>
+                <a class="nav-tab is-active" href="/espacios-disponibles">Espacios</a>
+                <a class="nav-tab" href="/mis-reservas">Mis reservas</a>
+                <a class="nav-tab" href="/mi-perfil">Mi perfil</a>
+            </nav>
+            <span class="role-badge" data-role-badge hidden>Administrador</span>
+            <button class="logout-button" type="button" data-logout>Cerrar sesión</button>
+        </header>
+
+        <section class="content-shell">
+            <div class="page-heading">
+                <p class="eyebrow">Espacios disponibles</p>
+                <h1>Elige el lugar para tu próxima actividad.</h1>
+                <p>Filtra por disciplina, horario, capacidad y presupuesto para encontrar la mejor opción.</p>
+            </div>
+
+            <form class="filter-panel" data-spaces-filter>
+                <label class="field">
+                    <span>Disciplina</span>
+                    <select name="disciplina" data-discipline-filter>
+                        <option value="">Todas</option>
+                    </select>
+                </label>
+                <label class="field time-slider-field">
+                    <span>Hora inicio <strong data-time-output="filterInicio">08:00</strong></span>
+                    <input name="horaInicioRange" type="range" min="5" max="22" step="1" value="8" data-time-range="filterInicio">
+                    <input name="horaInicio" type="hidden" value="08:00">
+                </label>
+                <label class="field time-slider-field">
+                    <span>Hora fin <strong data-time-output="filterFin">10:00</strong></span>
+                    <input name="horaFinRange" type="range" min="6" max="23" step="1" value="10" data-time-range="filterFin">
+                    <input name="horaFin" type="hidden" value="10:00">
+                </label>
+                <label class="field">
+                    <span>Capacidad mínima</span>
+                    <input name="capacidad" type="number" min="1" placeholder="Ej. 10">
+                </label>
+                <label class="field">
+                    <span>Presupuesto por hora</span>
+                    <input name="presupuesto" type="number" min="0" step="0.01" placeholder="Máximo">
+                </label>
+                <button class="primary-button compact-button" type="submit">Filtrar</button>
+            </form>
+
+            <div class="form-message" data-page-message role="status" aria-live="polite"></div>
+            <section class="spaces-grid" data-spaces-list></section>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

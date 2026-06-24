@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis reservas | Polideportivo</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-requires-auth="true">
+    <main class="app-page">
+        <header class="home-nav app-nav">
+            <a class="brand home-brand" href="/inicio" aria-label="Inicio Polideportivo">
+                <span class="brand-mark">P</span>
+                <span>Polideportivo</span>
+            </a>
+            <nav class="nav-tabs" aria-label="Navegación principal">
+                <a class="nav-tab" href="/inicio">Inicio</a>
+                <a class="nav-tab" href="/disciplinas-vista">Disciplinas</a>
+                <a class="nav-tab" href="/espacios-disponibles">Espacios</a>
+                <a class="nav-tab is-active" href="/mis-reservas">Mis reservas</a>
+                <a class="nav-tab" href="/mi-perfil">Mi perfil</a>
+            </nav>
+            <span class="role-badge" data-role-badge hidden>Administrador</span>
+            <button class="logout-button" type="button" data-logout>Cerrar sesión</button>
+        </header>
+
+        <section class="content-shell">
+            <div class="page-heading">
+                <p class="eyebrow">Historial</p>
+                <h1>Mis reservas</h1>
+                <p>Revisa tus reservas, paga las pendientes o cancela las que ya no necesites.</p>
+            </div>
+
+            <div class="form-message" data-page-message role="status" aria-live="polite"></div>
+            <section class="reservations-list" data-reservations-list></section>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

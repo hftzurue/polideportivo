@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar | Polideportivo</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-requires-auth="true">
+    <main class="app-page">
+        <header class="home-nav app-nav">
+            <a class="brand home-brand" href="/inicio" aria-label="Inicio Polideportivo">
+                <span class="brand-mark">P</span>
+                <span>Polideportivo</span>
+            </a>
+            <nav class="nav-tabs" aria-label="Navegación principal">
+                <a class="nav-tab" href="/inicio">Inicio</a>
+                <a class="nav-tab" href="/disciplinas-vista">Disciplinas</a>
+                <a class="nav-tab" href="/espacios-disponibles">Espacios</a>
+                <a class="nav-tab" href="/mis-reservas">Mis reservas</a>
+                <a class="nav-tab" href="/mi-perfil">Mi perfil</a>
+            </nav>
+            <span class="role-badge" data-role-badge hidden>Administrador</span>
+            <button class="logout-button" type="button" data-logout>Cerrar sesión</button>
+        </header>
+
+        <section class="content-shell narrow-shell">
+            <div class="page-heading">
+                <p class="eyebrow">Nueva reserva</p>
+                <h1 data-reserve-title>Reserva tu espacio.</h1>
+                <p data-reserve-description>Completa la fecha y el horario de uso.</p>
+            </div>
+
+            <form class="reservation-panel" data-reserve-form>
+                <div class="form-message" data-page-message role="status" aria-live="polite"></div>
+                <label class="field">
+                    <span>Fecha</span>
+                    <input name="fechaReserva" type="date" required>
+                </label>
+                <div class="form-row">
+                    <label class="field time-slider-field">
+                        <span>Hora inicio <strong data-time-output="reserveInicio">08:00</strong></span>
+                        <input name="horaInicioRange" type="range" min="8" max="21" step="1" value="8" data-time-range="reserveInicio">
+                        <input name="horaInicio" type="hidden" value="08:00">
+                    </label>
+                    <label class="field time-slider-field">
+                        <span>Hora fin <strong data-time-output="reserveFin">09:00</strong></span>
+                        <input name="horaFinRange" type="range" min="9" max="22" step="1" value="9" data-time-range="reserveFin">
+                        <input name="horaFin" type="hidden" value="09:00">
+                    </label>
+                </div>
+                <label class="check-row">
+                    <input name="equipamiento" type="checkbox">
+                    <span>Agregar equipamiento disponible para esta disciplina</span>
+                </label>
+                <button class="primary-button" type="submit">Reservar</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

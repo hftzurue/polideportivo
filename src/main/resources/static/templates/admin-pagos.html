@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagos | Administración</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-requires-auth="true" data-requires-admin="true" data-admin-module-page="pagos">
+    <main class="app-page">
+        <header class="home-nav app-nav">
+            <a class="brand home-brand" href="/admin" aria-label="Inicio Polideportivo">
+                <span class="brand-mark">P</span>
+                <span>Polideportivo</span>
+            </a>
+            <nav class="nav-tabs" aria-label="Navegación admin">
+                <a class="nav-tab" href="/admin">Inicio</a>
+                <a class="nav-tab" href="/admin-disciplina">Disciplinas</a>
+                <a class="nav-tab" href="/admin-espacio">Espacios</a>
+                <a class="nav-tab" href="/admin-reserva">Reservas</a>
+                <a class="nav-tab" href="/admin-usuarios">Usuarios</a>
+                <a class="nav-tab is-active" href="/admin-pagos">Pagos</a>
+            </nav>
+            <span class="role-badge" data-role-badge hidden>Administrador</span>
+            <button class="logout-button" type="button" data-logout>Cerrar sesión</button>
+        </header>
+
+        <section class="content-shell">
+            <div class="page-heading">
+                <p class="eyebrow">Administración</p>
+                <h1>Pagos</h1>
+                <p>Registra pagos de reservas y administra su estado.</p>
+            </div>
+
+            <div class="form-message" data-admin-message role="status" aria-live="polite"></div>
+
+            <section class="admin-crud">
+                <form class="admin-form" data-admin-form></form>
+                <section class="admin-table-wrap">
+                    <div class="admin-table-heading">
+                        <h2 data-admin-title>Pagos</h2>
+                        <button class="secondary-inline-button" type="button" data-admin-refresh>Actualizar</button>
+                    </div>
+                    <div class="admin-table" data-admin-list></div>
+                </section>
+            </section>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>
