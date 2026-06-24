@@ -917,11 +917,10 @@ const adminModules = {
             ...item,
             idDisciplina: item.disciplina?.idDisciplina
         }),
+        sort: compareById("idEquipamiento"),
         summary: (item) => `${item.nombre} · ${item.disciplina?.nombre || "Sin disciplina"} · ${item.cantidadTotal || 0} unidades`,
-        extraActions: [
-            { label: "Activar", action: (item) => adminPatch(`/equipamientos/${item.idEquipamiento}/activar`, {}) },
-            { label: "Desactivar", action: (item) => adminPatch(`/equipamientos/${item.idEquipamiento}/desactivar`, {}) }
-        ]
+        className: (item) => item.activo ? "is-active-space" : "is-inactive-space",
+        toggleActive: async (item, checked) => adminPatch(`/equipamientos/${item.idEquipamiento}/${checked ? "activar" : "desactivar"}`, {})
     },
     usuarios: {
         title: "Usuarios",

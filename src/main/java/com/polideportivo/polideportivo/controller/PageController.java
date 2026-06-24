@@ -61,6 +61,11 @@ public class PageController {
         return "forward:/templates/admin-espacio.html";
     }
 
+    @GetMapping("/admin-equipamiento")
+    public String adminEquipamiento() {
+        return "forward:/templates/admin-equipamiento.html";
+    }
+
     @GetMapping("/admin-reserva")
     public String adminReserva() {
         return "forward:/templates/admin-reserva.html";
