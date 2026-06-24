@@ -18,4 +18,5 @@ public interface EquipamientoRepository extends JpaRepository<Equipamiento, Inte
     // Buscar equipamientos por disciplina, sin importar si estan activos o no
     List<Equipamiento> findByDisciplina_IdDisciplina(Integer idDisciplina);
     boolean existsByNombreIgnoreCase(String nombre);
+    boolean existsByDisciplina_IdDisciplina(Integer idDisciplina);
 }

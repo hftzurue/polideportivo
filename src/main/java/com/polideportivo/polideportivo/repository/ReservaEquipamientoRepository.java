@@ -27,6 +27,8 @@ public interface ReservaEquipamientoRepository extends JpaRepository<ReservaEqui
             Integer idReserva,
             Integer idEquipamiento
     );
+    boolean existsByReserva_IdReserva(Integer idReserva);
+    boolean existsByEquipamiento_IdEquipamiento(Integer idEquipamiento);
     // Elimina los equipamiento asociado a una reserva
     void deleteByReserva_IdReserva(Integer idReserva);
     // Elimina un equipamiento específico dentro de una reserva específica

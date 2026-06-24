@@ -517,8 +517,16 @@ a:hover {
 
 .home-summary strong {
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
     font-size: 1.55rem;
+}
+
+.home-summary small {
+    display: block;
+    margin-bottom: 12px;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.86rem;
+    font-weight: 700;
 }
 
 .home-summary p {

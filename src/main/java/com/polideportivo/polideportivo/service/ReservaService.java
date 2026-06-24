@@ -5,6 +5,8 @@ import com.polideportivo.polideportivo.entity.Reserva;
 import com.polideportivo.polideportivo.entity.Usuario;
 import com.polideportivo.polideportivo.enums.EstadoReserva;
 import com.polideportivo.polideportivo.repository.EspacioRepository;
+import com.polideportivo.polideportivo.repository.PagoRepository;
+import com.polideportivo.polideportivo.repository.ReservaEquipamientoRepository;
 import com.polideportivo.polideportivo.repository.ReservaRepository;
 import com.polideportivo.polideportivo.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
@@ -22,11 +24,20 @@ public class ReservaService {
     private final ReservaRepository reservaRepository;
     private final UsuarioRepository usuarioRepository;
     private final EspacioRepository espacioRepository;
+    private final PagoRepository pagoRepository;
+    private final ReservaEquipamientoRepository reservaEquipamientoRepository;
 
-    public ReservaService(ReservaRepository reservaRepository, UsuarioRepository usuarioRepository, EspacioRepository espacioRepository) {
+    public ReservaService(
+            ReservaRepository reservaRepository,
+            UsuarioRepository usuarioRepository,
+            EspacioRepository espacioRepository,
+            PagoRepository pagoRepository,
+            ReservaEquipamientoRepository reservaEquipamientoRepository) {
         this.reservaRepository = reservaRepository;
         this.usuarioRepository = usuarioRepository;
         this.espacioRepository = espacioRepository;
+        this.pagoRepository = pagoRepository;
+        this.reservaEquipamientoRepository = reservaEquipamientoRepository;
     }
     public Reserva registrarReserva(Reserva reserva) {
         Integer idUsuario = reserva.getUsuario().getIdUsuario();
@@ -214,6 +225,14 @@ public class ReservaService {
 
     public void eliminarReserva(Integer idReserva) {
         Reserva reserva = obtenerPorId(idReserva);
+        if (pagoRepository.existsByReserva_IdReserva(idReserva)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "No se pudo eliminar la reserva porque existe un pago asociado a esta"
+            );
+        }
+
+        reservaEquipamientoRepository.deleteByReserva_IdReserva(idReserva);
         reservaRepository.delete(reserva);
     }
 

@@ -1,6 +1,7 @@
 package com.polideportivo.polideportivo.service;
 
 import com.polideportivo.polideportivo.entity.Usuario;
+import com.polideportivo.polideportivo.repository.ReservaRepository;
 import com.polideportivo.polideportivo.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
@@ -15,13 +16,16 @@ import java.util.List;
 public class UsuarioService{
 
     private final UsuarioRepository usuarioRepository;
+    private final ReservaRepository reservaRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UsuarioService(
             UsuarioRepository usuarioRepository,
+            ReservaRepository reservaRepository,
             PasswordEncoder passwordEncoder) {
 
         this.usuarioRepository = usuarioRepository;
+        this.reservaRepository = reservaRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -97,6 +101,13 @@ public class UsuarioService{
 
     public void eliminarUsuario(Integer id) {
         Usuario usuario = obtenerPorId(id);
+        if (reservaRepository.existsByUsuario_IdUsuario(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "No se pudo eliminar el usuario porque existen reservas asociadas a este"
+            );
+        }
+
         usuarioRepository.delete(usuario);
     }
 }

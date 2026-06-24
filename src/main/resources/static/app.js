@@ -635,6 +635,10 @@ async function adminDelete(endpoint) {
     });
 }
 
+async function deleteReservationEquipmentByReservation(idReserva) {
+    return adminDelete(`/reserva-equipamientos/reserva/${idReserva}`);
+}
+
 function buildReservaEstadoPayload(item, estado) {
     return {
         usuario: { idUsuario: item.usuario?.idUsuario },
@@ -783,6 +787,7 @@ function setupRegisterForm() {
 
 function setupAuthenticatedPage() {
     const userName = document.querySelector("[data-user-name]");
+    const userUsername = document.querySelector("[data-user-username]");
     const roleBadge = document.querySelector("[data-role-badge]");
     const logoutButton = document.querySelector("[data-logout]");
     const storedUser = JSON.parse(localStorage.getItem(USER_KEY) || "{}");
@@ -792,13 +797,23 @@ function setupAuthenticatedPage() {
         userName.textContent = storedUser.nombreUsuario;
     }
 
+    if (userUsername && storedUser.nombreUsuario) {
+        userUsername.textContent = `@${storedUser.nombreUsuario}`;
+    }
+
     if (userName && document.body.dataset.requiresAuth === "true") {
         loadMyProfile()
             .then((profile) => {
                 userName.textContent = profile.nombre || storedUser.nombreUsuario || "Usuario";
+                if (userUsername) {
+                    userUsername.textContent = profile.nombreUsuario ? `@${profile.nombreUsuario}` : "";
+                }
             })
             .catch(() => {
                 userName.textContent = storedUser.nombreUsuario || "Usuario";
+                if (userUsername) {
+                    userUsername.textContent = storedUser.nombreUsuario ? `@${storedUser.nombreUsuario}` : "";
+                }
             });
     }
 
@@ -926,7 +941,8 @@ const adminModules = {
             { label: "Confirmar", action: (item) => updateReservaEstado(item, "CONFIRMADA") },
             { label: "Cancelar", action: (item) => updateReservaEstado(item, "CANCELADA") },
             { label: "Finalizar", action: (item) => updateReservaEstado(item, "FINALIZADA") }
-        ]
+        ],
+        beforeDelete: (item) => deleteReservationEquipmentByReservation(item.idReserva)
     },
     equipamientos: {
         title: "Equipamiento",
@@ -1395,6 +1411,9 @@ function setupAdminRecordActions(moduleKey, module, items, sources) {
             }
 
             try {
+                if (module.beforeDelete) {
+                    await module.beforeDelete(item);
+                }
                 await adminDelete(`${module.endpoint}/${id}`);
                 setMessage(message, "success", "Registro eliminado.");
                 await loadAdminModule(moduleKey, sources);
@@ -1650,6 +1669,26 @@ async function setupReservePage() {
         const data = Object.fromEntries(new FormData(form).entries());
 
         try {
+            let selectedEquipment = null;
+
+            if (form.equipamiento.checked) {
+                const equipments = await loadEquipmentsByDiscipline(getSpaceDisciplineId(space));
+                selectedEquipment = equipments[0] || null;
+
+                if (!selectedEquipment) {
+                    const reserveWithoutEquipment = await showAppConfirm({
+                        title: "Equipamiento no disponible",
+                        message: "No hay equipamiento activo para esta disciplina. Puedes elegir otro horario o reservar igualmente sin equipamiento.",
+                        confirmText: "Reservar igualmente",
+                        cancelText: "Elegir otro horario"
+                    });
+
+                    if (!reserveWithoutEquipment) {
+                        return;
+                    }
+                }
+            }
+
             const reservation = await createMyReservation({
                 espacio: { idEspacio: Number(idEspacio) },
                 cantidadPersonas: Number(space.capacidad || 1),
@@ -1658,11 +1697,21 @@ async function setupReservePage() {
                 horaFin: data.horaFin
             });
 
-            if (form.equipamiento.checked) {
-                const equipments = await loadEquipmentsByDiscipline(getSpaceDisciplineId(space));
+            if (selectedEquipment) {
+                try {
+                    await addEquipmentToReservation(reservation.idReserva, selectedEquipment.idEquipamiento);
+                } catch (error) {
+                    const reserveWithoutEquipment = await showAppConfirm({
+                        title: "Equipamiento no disponible",
+                        message: `${error.message}. Puedes elegir otro horario o reservar igualmente sin equipamiento.`,
+                        confirmText: "Reservar igualmente",
+                        cancelText: "Elegir otro horario"
+                    });
 
-                if (equipments.length) {
-                    await addEquipmentToReservation(reservation.idReserva, equipments[0].idEquipamiento);
+                    if (!reserveWithoutEquipment) {
+                        await cancelMyReservation(reservation.idReserva);
+                        return;
+                    }
                 }
             }
 

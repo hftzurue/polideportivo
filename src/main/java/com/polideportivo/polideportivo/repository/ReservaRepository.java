@@ -71,5 +71,6 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
             LocalDateTime fechaInicio,
             LocalDateTime fechaFin
     );
+    boolean existsByUsuario_IdUsuario(Integer idUsuario);
+    boolean existsByEspacio_IdEspacio(Integer idEspacio);
 }
-
